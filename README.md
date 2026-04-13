@@ -29,5 +29,3 @@ Consulte aqui a última atualização: [Relatório {{ page.website }}](report.ht
 </details>
 
 <hr>
-
-<p><small>2025 - 2026, GitTemplateReports (v.1.0.4)</small></p>
