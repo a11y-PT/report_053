@@ -5,6 +5,7 @@ uri: "https://bupi.gov.pt/pt"   # Entre as aspas escreve o domínio do website
 a11y_statement: "https://bupi.gov.pt/pt/acessibilidade" # Entre as aspas escreve o URL da Declaração de Acessibilidade do website
 owner: "BUPi"         # Entre as aspas escrever o nome do owner do website
 seal: "Prata"                          # Entre as aspas escreve Bronze, Prata ou Ouro
+status: "Em andamento"   #Entre as aspas escreve o estado do relatório
 ---
 
 # BUPi - Balcão Único do Prédio
