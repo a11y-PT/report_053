@@ -7,7 +7,7 @@ owner: "BUPi"         # Entre as aspas escrever o nome do owner do website
 seal: "Prata"                          # Entre as aspas escreve Bronze, Prata ou Ouro
 ---
 
-# {{ page.website }}
+# BUPi - Balcão Único do Prédio
 
 - Data de criação: 13/04/2026
 - URL: https://bupi.gov.pt/pt
