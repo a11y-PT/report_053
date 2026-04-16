@@ -8,18 +8,23 @@ seal: "Prata"                          # Entre as aspas escreve Bronze, Prata ou
 status: "Auditoria a decorrer"   #Entre as aspas escreve o estado do relatório
 ---
 
-# BUPi - Balcão Único do Prédio
+# Relatório de auditoria
 
-- Data de criação: 13/04/2026
-- URL: https://bupi.gov.pt/pt
-- Propriedade: eBUPi
-- Candidatura: Prata
+Sítio Web: {{ page.website }} 
 
-## Relatório de Auditoria
+- Data de criação: {{ page.date }}
+- URL: {{ page.uri }} 
+- Propriedade: {{ page.owner }}
+- Candidatura: {{ page.seal }}
+- Validade do Selo: {{ page.validity }}
+- Estado: {{ page.status }}
 
-<p>O presente relatório resultou da auditoria da informação publicada na <a href="https://bupi.gov.pt/pt/acessibilidade">Declaração de Acessibilidade e Usabilidade</a>.</p>
+## Relatório {{ page.website }}
+
+O presente relatório resultou da auditoria da informação publicada na [Declaração de Acessibilidade e Usabilidade]({{ page.a11y_statement }}).
 
 Consulte aqui a última atualização: [Relatório {{ page.website }}](report.html)
+
 
 <details>
   <summary>Histórico de atualizações</summary>
