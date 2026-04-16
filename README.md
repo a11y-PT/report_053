@@ -8,7 +8,7 @@ seal: "Prata"                          # Entre as aspas escreve Bronze, Prata ou
 status: "Auditoria a decorrer"   #Entre as aspas escreve o estado do relatório
 ---
 
-# {{ page.website }} 
+# Relatório de auditoria
 
 Sítio Web: {{ page.website }} 
 
