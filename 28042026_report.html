@@ -1,0 +1,1624 @@
+<!DOCTYPE html>
+<html lang="pt">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Relatório BUPi - Balcão Único do Prédio</title>
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+  <style>
+    .skip-link { position: absolute; top: -40px; left: 0; background: #000; color: white; padding: 8px; z-index: 100; transition: top 0.3s ease; }
+    .skip-link:focus { top: 0; }
+    .visually-hidden-focusable:not(:focus):not(:focus-within) { position: absolute !important; width: 1px !important; height: 1px !important; padding: 0 !important; margin: -1px !important; overflow: hidden !important; clip: rect(0,0,0,0) !important; white-space: nowrap !important; border: 0 !important; }
+    body { 
+      background-color: #ffffff; 
+      padding-top: 2rem; 
+      padding-bottom: 0;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      min-height: 100vh;
+    }
+    .container { 
+      max-width: 900px;
+      width: 100%;
+      background-color: transparent; 
+      padding-top: 1rem;
+      padding-bottom: 2rem;
+      padding-left: 1rem;
+      padding-right: 1rem;
+    }
+    .report-footer {
+      width: 100%;
+      align-self: stretch;
+      background-color: #ffffff;
+      color: #4a5568;
+      text-align: center;
+      padding: 1.25rem 1rem;
+      font-size: 0.8rem;
+      border-top: 1px solid #e0e0e0;
+      margin-top: auto;
+    }
+    .report-footer p { margin: 0.2rem 0; }
+    h1 { font-size: 1.8rem; margin-bottom: 1.5rem; }
+    .status-ok { color: #ffffff; background-color: #0E8A16; padding: 0.25rem 0.5rem; border-radius: 50px; font-weight: 500; display: inline-block; }
+    .status-nok { color: #ffffff; background-color: #B60205; padding: 0.25rem 0.5rem; border-radius: 50px; font-weight: 500; display: inline-block; }
+    .status-melhoria { color: #856404; background-color: #fff3cd; padding: 0.25rem 0.5rem; border-radius: 50px; font-weight: 500; display: inline-block; }
+    .status-na { color: #000; background-color: #C2E0C6; padding: 0.25rem 0.5rem; border-radius: 50px; font-weight: 500; display: inline-block; }
+    .requirement-title { margin-top: 2rem; }
+    .requirement-title h4, .requirement-title h3 { color: #000; }
+    .mb-4 ul li a { color: #1e3a8a; text-decoration: none; }
+    .mb-4 ul li a:hover { color: #1e40af; text-decoration: underline; }
+    summary.index-summary { display: list-item; font-weight: 700; font-size: 1.25rem !important; color: #000; cursor: pointer; }
+    summary.index-summary:focus { outline: 3px solid #333399; outline-offset: 2px; }
+    .evidence-list { list-style-type: disc; padding-left: 1.5rem; margin: 1rem 0; }
+    .evidence-item { margin: 0.5rem 0; padding: 0.5rem 0.5rem 0.5rem 1.5rem; border-radius: 4px; background-color: #f6f6f6; color: #000; list-style: none; margin-left: -1.5rem; }
+    .evidence-item p { margin: 1.5rem 0 1rem 0; }
+    .evidence-labels { font-size: 0.85em; display: inline-flex; flex-wrap: wrap; gap: 0.25rem; }
+    .label-tag { padding: 0.125rem 0.375rem; border-radius: 1rem; font-size: 0.75rem; font-weight: 500; color: white; display: inline-block; margin-right: 0.25rem; }
+    .label-checklist { background-color: #5319E7; }
+    .label-auto { background-color: #5319E7; }
+    .label-declaracao { background-color: #5319E7; }
+    .label-outras { background-color: #5319E7; }
+    .label-melhoria { background-color: #FBCA04; color: #000; }
+    .label-na { background-color: #C2E0C6; color: #000; }
+    .label-ok { background-color: #0E8A16; }
+    .label-nok { background-color: #B60205; }
+    .label-requisito { background-color: #0052CC; }
+    .sr-only { position: absolute; width: 1px; height: 1px; padding: 0; margin: -1px; overflow: hidden; clip: rect(0, 0, 0, 0); white-space: nowrap; border: 0; }
+    .report-section { border-bottom: 3px solid #000000; padding-bottom: 2rem; margin-bottom: 2rem; }
+    .report-section:last-of-type { border-bottom: none; }
+    .checklist-section { border-bottom: 3px solid #000000; padding-bottom: 1.5rem; margin-bottom: 1.5rem; }
+    .avaliacao-manual-section { padding-bottom: 1.5rem; margin-bottom: 1.5rem; }
+    .checklist-section:last-of-type { border-bottom: none; }
+    .issue-link { color: #1e3a8a; text-decoration: none; }
+    .issue-link:hover { text-decoration: underline; color: #1e40af; }
+    table.table caption { caption-side: top; text-align: left; padding-bottom: 0.5rem; font-weight: 600; color: #000; }
+  </style>
+</head>
+<body>
+  <a href="#conteudo-principal" class="skip-link visually-hidden-focusable">Saltar para o conteúdo principal</a>
+  <div class="container mt-4" id="conteudo-principal">
+    <header class="mb-4">
+        <h1>Relatório Avaliação de Candidatura<br><em style="font-size:70%">BUPi - Balcão Único do Prédio</em></h1>
+    </header>
+
+    <section class="mb-4">
+      <ul>
+        <li>Avaliação feita por: ARTE. I.P. - Núcleo de Experiência e Usabilidade</li>
+        <li>Data de criação: 13/04/2026</li>
+        <li>Última atualização: 28/04/2026</li>
+        <li>URL: <a href="https://bupi.gov.pt/pt" target="_blank" rel="noopener noreferrer">https://bupi.gov.pt/pt</a></li>
+        <li>Propriedade: eBUPi</li>
+        <li>Candidatura: Prata</li>
+        <li>Progresso (% de requisitos auditados): 100%</li>
+      </ul>
+    </section>
+
+    <nav class="mb-4 report-section" aria-label="Índice">
+      <details open>
+        <summary class="index-summary">Índice</summary>
+        <ul>
+          <li><a href="#introducao">Introdução</a></li>
+          
+          <li><a href="#avaliacao-automatica">Avaliação automática</a></li>
+          
+          <li><a href="#avaliacao-manual">Avaliação manual</a>
+            <ul class="indent-list">
+              
+              <li><a href="#checklist-10-aspetos">Checklist 10 aspetos</a>
+                <ul class="indent-list">
+                  <li><a href="#req-chk10-r-1.1">Requisito 1.1 - O menu de navegação deve estar estruturado como uma lista de opções</a></li><li><a href="#req-chk10-r-1.2">Requisito 1.2 - É possível selecionar as opções e as subopções do menu quer com rato quer com teclado</a></li><li><a href="#req-chk10-r-1.3">Requisito 1.3 - As imagens-link, caso existam no menu, devem ter o correspondente equivalente alternativo em texto</a></li><li><a href="#req-chk10-r-2.1">Requisito 2.1 - Existe um título h1 marcado na página</a></li><li><a href="#req-chk10-r-2.2">Requisito 2.2 - Existe uma marcação hierarquizada de títulos e subtítulos na página (h1...h6)</a></li><li><a href="#req-chk10-r-3.1">Requisito 3.1 - As células que constituem os cabeçalhos da tabela estão marcadas com o elemento th</a></li><li><a href="#req-chk10-r-3.2">Requisito 3.2 - A legenda da tabela está marcada com o elemento caption</a></li><li><a href="#req-chk10-r-4.1">Requisito 4.1 - Ao clicar com o rato na etiqueta, o cursor surge no respetivo campo de edição</a></li><li><a href="#req-chk10-r-4.2">Requisito 4.2 - É possível identificar os campos de preenchimento obrigatório quando se usa apenas um leitor de ecrã</a></li><li><a href="#req-chk10-r-4.3">Requisito 4.3 - É possível localizar e ler as mensagens de erro usando apenas um leitor de ecrã</a></li><li><a href="#req-chk10-r-5.1">Requisito 5.1 - A imagem ou gráfico tem um equivalente alternativo em texto curto e correto</a></li><li><a href="#req-chk10-r-5.2">Requisito 5.2 - O gráfico é acompanhado de uma descrição longa</a></li><li><a href="#req-chk10-r-5.3">Requisito 5.3 - As imagens-link têm um equivalente alternativo correto</a></li><li><a href="#req-chk10-r-6.1">Requisito 6.1 - No corpo de um documento, o rácio de contraste entre a cor do texto normal (menor que 18 pontos ou menor que 14 pontos negrito) e a cor do fundo é superior a 4,5:1</a></li><li><a href="#req-chk10-r-8.3">Requisito 8.3 - Quando se retira a CSS, deve ser possível reconhecer a semântica dos diversos elementos</a></li><li><a href="#req-chk10-r-9.1">Requisito 9.1 - Quando a caixa de diálogo é aberta, o foco (cursor do Browser) move-se para um elemento dentro da caixa de diálogo</a></li><li><a href="#req-chk10-r-9.2">Requisito 9.2 - Quando uma caixa de diálogo está aberta, a navegação com teclado (Browser ou Tecnologia de apoio) tem de ficar circunscrita aos elementos que compõem a caixa de diálogo</a></li><li><a href="#req-chk10-r-9.3">Requisito 9.3 - A caixa de diálogo tem de ter um mecanismo que permita sair ou fechar a caixa, quer através de teclado quer através de um dispositivo apontador</a></li><li><a href="#req-chk10-r-9.4">Requisito 9.4 - Quando a caixa de diálogo fecha, o foco (cursor do Browser) deve voltar ao elemento interativo que a invocou</a></li>
+                </ul>
+              </li>
+              
+              <li><a href="#checklist-conteudo">Checklist Conteúdo</a>
+                <ul class="indent-list">
+                  <li><a href="#req-conteudo-r-1.1">Requisito 1.1 - O sítio Web apresenta um resumo breve do seu propósito, visível sem se fazer scroll</a></li><li><a href="#req-conteudo-r-1.3">Requisito 1.3 - Cada bloco de conteúdo contém a sua data de atualização</a></li><li><a href="#req-conteudo-r-2.1">Requisito 2.1 - O tipo de letra do corpo do documento é adequado e o tamanho da letra é, no mínimo, de 12 pontos</a></li><li><a href="#req-conteudo-r-2.3">Requisito 2.3 - Blocos e linhas de texto com largura não superior a 100 caracteres</a></li><li><a href="#req-conteudo-r-5.2">Requisito 5.2 - Os elementos interativos têm uma dimensão mínima de 44px CSS (44 pontos) (vertical e horizontal)</a></li>
+                </ul>
+              </li>
+              
+              <li><a href="#checklist-transacao">Checklist Transação</a>
+                <ul class="indent-list">
+                  <li><a href="#req-transacao-r-1.1">Requisito 1.1 - A sequência de tabulação entre campos segue a sequência de preenchimento</a></li><li><a href="#req-transacao-r-1.2">Requisito 1.2 - Os formulários com mais de 2 ecrãs de altura devem ser distribuídos por várias páginas</a></li><li><a href="#req-transacao-r-1.3">Requisito 1.3 - Os formulários com mais de uma página têm a sequência de passos ilustrada</a></li><li><a href="#req-transacao-r-2.4">Requisito 2.4 - Campos obrigatórios devem ser claramente indicados como tal</a></li><li><a href="#req-transacao-r-3.1">Requisito 3.1 - Em ações longas, o sistema deve indicar o que está a acontecer</a></li><li><a href="#req-transacao-r-3.2">Requisito 3.2 - Deve ser confirmado o sucesso da transação/envio de informação</a></li><li><a href="#req-transacao-r-4.2">Requisito 4.2 - As ações destrutivas nunca devem ser permanentes; deve ser sempre possível desfazer a operação</a></li><li><a href="#req-transacao-r-4.3">Requisito 4.3 - As mensagens de erro são claramente identificadas junto aos campos de origem</a></li>
+                </ul>
+              </li>
+              <li><a href="#outras-violacoes">Outras violações</a></li>
+            </ul>
+          </li>
+          
+          <li><a href="#etiquetas">Significado das etiquetas utilizadas</a></li>
+        </ul>
+      </details>
+    </nav>
+
+    <section id="introducao" class="mb-5 report-section">
+      <h2>Introdução</h2>
+      <p>O website <a href="https://bupi.gov.pt/pt" target="_blank">https://bupi.gov.pt/pt</a> <strong><span class="status-nok"><span class="sr-only">etiqueta: </span>não passa</span></strong> nos requisitos mínimos do Selo de Usabilidade e Acessibilidade.</p>
+
+      <table class="table table-bordered">
+        <caption>Estado das avaliações efetuadas</caption>
+        <thead><tr><th>Tipo de avaliação</th><th>Estado</th></tr></thead>
+        <tbody>
+          <tr><td>Avaliação Automática</td><td><span class="status-nok"><span class="sr-only">etiqueta: </span>NOK</span></td></tr>
+          <tr><td>Avaliação Manual</td><td><span class="status-nok"><span class="sr-only">etiqueta: </span>NOK</span></td></tr>
+        </tbody>
+      </table>
+      <p>Das avaliações manuais efetuadas obtiveram-se os resultados que se sintetizam na tabela seguinte.</p>
+      <table class="table table-bordered">
+        <caption>Níveis de conformidade das avaliações manuais</caption>
+        <thead><tr><th>Checklist</th><th>Conformidade alcançada</th><th>Resultado</th></tr></thead>
+        <tbody>
+          <tr><td>10 aspetos</td><td>36.0% (9/25)</td><td><span class="status-nok"><span class="sr-only">etiqueta: </span>Não passa</span></td></tr>
+          <tr><td>Conteúdo</td><td>76.5% (13/17)</td><td><span class="status-ok"><span class="sr-only">etiqueta: </span>Passa</span></td></tr>
+          <tr><td>Transação</td><td>63.6% (7/11)</td><td><span class="status-nok"><span class="sr-only">etiqueta: </span>Não passa</span></td></tr>
+        </tbody>
+      </table>
+      <p><strong>Nota:</strong> para passar os requisitos do Selo é necessário alcançar um nível de conformidade superior ou igual a 75% em cada uma das 3 checklists.</p></section>
+
+    <section id="avaliacao-automatica" class="mb-5 report-section">
+      <h2>Avaliação automática</h2>
+      <p><span class="status-nok"><span class="sr-only">etiqueta: </span>NOK</span></p>
+      <p>Para a produção das evidências do presente capítulo, foram utilizadas ferramentas automatizadas de avaliação de requisitos de acessibilidade de acordo com a norma WCAG 2.1 'AA'. A amostra em análise pelas ferramentas é composta pela Homepage mais todas as páginas diretamente hiperligadas por ela, pertencentes ao domínio.</p>
+      
+      <p>Lista de evidências recolhidas:</p>
+      <ul class="evidence-list">
+            <li class="evidence-item">
+              <p><span class="visually-hidden">evidência: </span><a href="https://github.com/a11y-PT/report_053/issues/2" class="issue-link" target="_blank" rel="noopener noreferrer">issue #2</a> <strong>Existem problemas de acessibilidade</strong></p>
+              <div class="evidence-labels"><span class="label-tag label-auto"><span class="sr-only">etiqueta: </span>av auto</span><span class="label-tag label-melhoria"><span class="sr-only">etiqueta: </span>melhoria</span></div>
+              <div class="issue-content"><p>Efetuámos também uma análise com o validador Rocket Validator que indica a existência de 100 erros de Acessibilidade e que precisam ser corrigidos:</p>
+<img src="https://github.com/user-attachments/assets/3c3b3f62-10d0-4bea-b54f-6e40dd4448f4" alt="Image" class="evidence-image" style="max-width: 100%; height: auto; margin: 10px 0; border: 1px solid #ddd; border-radius: 4px;">
+
+
+
+<p><em>Figura 1 - Análise automática feita pelo Rocket Validator indica 100 erros de acessibilidade em uma amostra de 21 páginas</em></p>
+<p>Para mais informações partilhamos o <a href="https://rocketvalidator.com/s/88730403-d46c-43e8-86dd-b0502ab3fa01">relatório da análise automática feita pelo Rocket Validator</a>.</p>
+</div>
+            </li>
+            <li class="evidence-item">
+              <p><span class="visually-hidden">evidência: </span><a href="https://github.com/a11y-PT/report_053/issues/1" class="issue-link" target="_blank" rel="noopener noreferrer">issue #1</a> <strong>Avaliação Automática - Access Monitor / Observatório (em avaliação)</strong></p>
+              <div class="evidence-labels"><span class="label-tag label-auto"><span class="sr-only">etiqueta: </span>av auto</span><span class="label-tag label-nok"><span class="sr-only">etiqueta: </span>NOK</span></div>
+              <div class="issue-content"><p>Analisámos a amostra com o Access Monitor, de acordo com o método Home+, tendo sido avaliadas, no total, <strong>23 páginas</strong>.</p>
+<p>Destas páginas, <strong>2 páginas têm pontuação abaixo de 9</strong>: </p>
+<ul>
+<li><a href="https://bupi.gov.pt/pt">https://bupi.gov.pt/pt</a> | 8.5 </li>
+<li><a href="https://bupi.gov.pt/pt/media">https://bupi.gov.pt/pt/media</a> | 8.7</li>
+</ul>
+<p>Para mais informação sobre os erros de acessibilidade que existem nessas páginas podem consultar o ficheiro .csv:<br><strong><a href="https://github.com/user-attachments/files/26636753/06042026-avaliacao-bupi.csv">06042026-avaliacao-bupi.csv</a></strong></p>
+<p>A correção desses erros fará aumentar a pontuação.</p>
+<p><strong>Nota: A atualização ainda não foi efetuada no ambiente de produção nem no Observatório, pelo que estes valores ainda não se encontram públicos.</strong></p>
+<img src="https://github.com/user-attachments/assets/8c5431a5-ae5a-4f66-a97c-882610b6f7ab" alt="Image" class="evidence-image" style="max-width: 100%; height: auto; margin: 10px 0; border: 1px solid #ddd; border-radius: 4px;">
+
+
+<p>Figura 1 - Indicadores e conformidade do sítio</p>
+</div>
+            </li></ul></section>
+
+    <section id="avaliacao-manual" class="mb-5 mt-5 avaliacao-manual-section">
+      <h2>Avaliação manual</h2>
+      <p><span class="status-nok"><span class="sr-only">etiqueta: </span>NOK</span></p>
+      <p>A avaliação manual é feita por inspeção perícial dos diversos requisitos constantes da:</p>
+      <ul>
+        <li>checklist <strong>10 aspetos críticos de acessibilidade funcional</strong>;</li>
+        <li>checklist <strong>Conteúdo</strong> (se candidato a Selo Bronze);</li>
+        <li>checklist <strong>Transação</strong> (se candidato a Selo Prata).</li>
+      </ul>
+      <p>Sempre que os auditores localizam uma falha grave de um requisito de acessibilidade que, embora não faça parte do esquema de requisitos do Selo, se enquadre no âmbito das violações das WCAG 2.1 'AA' do W3C, tal referência é anotada em "Outras violações" do presente capítulo. Apesar destas violações não se apresentarem com carácter vinculativo no esquema de requisitos do Selo, recomenda-se que as mesmas sejam corrigidas.</p>
+      <div class="checklist-section">
+        <h3 id="checklist-10-aspetos">Checklist 10 aspetos</h3>
+        <p><span class="status-nok"><span class="sr-only">etiqueta: </span>NOK</span></p>
+        
+      <p><strong>Nível de conformidade:</strong></p>
+        <ul>
+          <li><strong>Checklist 10 aspetos</strong>: 36.0% (9/25)
+            <ul>
+              <li>Requisitos avaliados: 27 (2 N/A excluídos, 25 aplicáveis)</li>
+              <li>Requisitos OK: 9</li>
+              <li>Requisitos NOK: 16</li>
+              <li>Requisitos N/A: 2</li>
+            </ul>
+          </li>
+        </ul>
+    
+        <h4 class="requirement-title" id="req-chk10-r-1.1">Requisito 1.1 - O menu de navegação deve estar estruturado como uma lista de opções</h4>
+<div class="requirement-content">
+<p><span class="status-nok"><span class="sr-only">etiqueta: </span>NOK</span></p>
+<p>Lista de evidências recolhidas:</p>
+<ul class="evidence-list">
+
+              <li class="evidence-item">
+                <p><span class="visually-hidden">evidência: </span><a href="https://github.com/a11y-PT/report_053/issues/3" class="issue-link" target="_blank" rel="noopener noreferrer">issue #3</a> <strong>Área privada - Existem menus não estruturados como lista de opções</strong></p>
+                <div class="evidence-labels"><span class="label-tag label-nok"><span class="sr-only">etiqueta: </span>NOK</span><span class="label-tag label-checklist"><span class="sr-only">etiqueta: </span>chk 10 web</span><span class="label-tag label-requisito"><span class="sr-only">etiqueta: </span>R 1.1</span></div>
+                <div class="issue-content"><blockquote>
+<p>O menu de navegação deve estar estruturado como uma lista de opções. </p>
+<ul>
+<li><a href="https://amagovpt.github.io/kit-selo/checklists/checklist-10aspetos#n11">Ver requisito 1.1 da lista 10 aspetos</a></li>
+</ul>
+</blockquote>
+<h3><strong>Evidências:</strong></h3>
+<p>Na <strong>área pública</strong> do site <a href="https://bupi.gov.pt/pt">BUPi</a>,<br>O menu em desktop e em mobile estão estruturados como lista de opções <code>&lt;ul&gt;&lt;li&gt;</code>. </p>
+<img src="https://github.com/user-attachments/assets/ce0741d8-61c4-4f2a-94cd-524cb955fb7c" alt="Image" class="evidence-image" style="max-width: 100%; height: auto; margin: 10px 0; border: 1px solid #ddd; border-radius: 4px;">
+
+
+
+<p><em>Figura 1 - Menu desktop estruturado como lista de opções no HTML</em></p>
+<img src="https://github.com/user-attachments/assets/b5d60ccf-8fca-4b05-9efe-8f3f02e212d8" alt="Image" class="evidence-image" style="max-width: 100%; height: auto; margin: 10px 0; border: 1px solid #ddd; border-radius: 4px;">
+
+
+
+<p> <em>Figura 2 - Menu mobile estruturado como lista de opções no HTML</em></p>
+<img src="https://github.com/user-attachments/assets/a7d53a16-d63f-42df-8dc3-de9a6bc13f7a" alt="Image" class="evidence-image" style="max-width: 100%; height: auto; margin: 10px 0; border: 1px solid #ddd; border-radius: 4px;">
+
+
+
+<p><em>Figura 3 - Opções no topo da página estruturadas como lista de opções no HTML</em></p>
+<p>N<strong>a <a href="https://cidadao.bupi.gov.pt/MyArea">Plataforma do BUPi</a>, corresponde à área onde é necessário fazer login com autenticação.gov</strong>, as opções dos menus não estão estruturadas como lista de opções na versão desktop e na versão mobile: </p>
+<img src="https://github.com/user-attachments/assets/f292b226-3550-4a34-a56c-95164f85fbc3" alt="Image" class="evidence-image" style="max-width: 100%; height: auto; margin: 10px 0; border: 1px solid #ddd; border-radius: 4px;">
+
+
+
+<p><em>Figura 4 - Opções do menu desktop da área privada não estão estruturadas como lista de opções</em> </p>
+<img src="https://github.com/user-attachments/assets/e03a0f51-b347-4f06-9e7a-d3fc93661cf2" alt="Image" class="evidence-image" style="max-width: 100%; height: auto; margin: 10px 0; border: 1px solid #ddd; border-radius: 4px;">
+
+
+
+<p><em>Figura 5 -  Opções do menu mobile da área privada não estão estruturadas como lista de opções</em></p>
+<img src="https://github.com/user-attachments/assets/345e05f9-0151-4601-bf12-1b8bb4681221" alt="Image" class="evidence-image" style="max-width: 100%; height: auto; margin: 10px 0; border: 1px solid #ddd; border-radius: 4px;">
+
+
+
+<p><em>Figura 6 - Opções no topo da página não estão estruturadas como lista de opções</em></p>
+<h3>Recomendações</h3>
+<p>Para que a navegação seja acessível e corretamente interpretada pelas tecnologias de apoio, os elementos dos menus e submenus deverão estar todos estruturados como lista, recorrendo aos elementos <code>&lt;ul&gt; e &lt;li&gt;</code>. Essa estrutura informa o número de opções, assim como a posição das opções na lista (exemplo: 1 de 2).  </p>
+</div>
+              </li></ul>
+</div>
+<h4 class="requirement-title" id="req-chk10-r-1.2">Requisito 1.2 - É possível selecionar as opções e as subopções do menu quer com rato quer com teclado</h4>
+<div class="requirement-content">
+<p><span class="status-nok"><span class="sr-only">etiqueta: </span>NOK</span></p>
+<p>Lista de evidências recolhidas:</p>
+<ul class="evidence-list">
+
+              <li class="evidence-item">
+                <p><span class="visually-hidden">evidência: </span><a href="https://github.com/a11y-PT/report_053/issues/60" class="issue-link" target="_blank" rel="noopener noreferrer">issue #60</a> <strong>Área privada - Menu não acessível por teclado e sem feedback de estado (expandido/colapsado)</strong></p>
+                <div class="evidence-labels"><span class="label-tag label-nok"><span class="sr-only">etiqueta: </span>NOK</span><span class="label-tag label-checklist"><span class="sr-only">etiqueta: </span>chk 10 web</span><span class="label-tag label-requisito"><span class="sr-only">etiqueta: </span>R 1.2</span></div>
+                <div class="issue-content"><blockquote>
+<p>É possível selecionar as opções e as subopções do menu quer com rato quer com teclado.</p>
+<ul>
+<li><a href="https://amagovpt.github.io/kit-selo/checklists/checklist-10aspetos#n12">Ver requisito 1.2 da lista 10 aspetos</a></li>
+</ul>
+</blockquote>
+<h3><strong>Evidências:</strong></h3>
+<p><strong>Na área privada</strong> (<a href="https://cidadao.bupi.gov.pt/MyArea">Plataforma</a>), onde é necessário fazer login com autenticação gov, não é possível aceder às opções do menu que surgem após pressionar o botão com as iniciais quando se navega com o teclado. </p>
+<img src="https://github.com/user-attachments/assets/7c7d4564-d7d5-4b7e-8137-b91f3ed74055" alt="Image" class="evidence-image" style="max-width: 100%; height: auto; margin: 10px 0; border: 1px solid #ddd; border-radius: 4px;">
+
+
+
+<p><em>Figura 1 - Área privada - Botão com avatar que contém iniciais do utilizador está estruturado apenas como <code>&lt;div&gt;</code> com um <code>&lt;span&gt;</code></em> </p>
+<h3><strong>Recomendações:</strong></h3>
+<p>Estruturar o botão das iniciais da área privada como <code>&lt;button&gt;</code>. </p>
+<p>Esse botão deve ser focável e incluir os atributos<code> aria-haspopup</code>, <code>aria-expanded</code> (para a informação sobre expandido e colapsado) e <code>aria-controls</code>. A navegação por teclado deve suportar setas, Tab e Escape. Ao fechar o menu, o foco deve voltar ao botão de avatar. </p>
+<p>Uma vez que o botão apenas contém as iniciais, para comunicar a função do botão, podem recorrer ao atributo <code>aria-label="Menu do perfil AC"</code>. </p>
+</div>
+              </li>
+              <li class="evidence-item">
+                <p><span class="visually-hidden">evidência: </span><a href="https://github.com/a11y-PT/report_053/issues/4" class="issue-link" target="_blank" rel="noopener noreferrer">issue #4</a> <strong>Área pública - Menu não acessível por teclado e sem feedback de estado (expandido/colapsado)</strong></p>
+                <div class="evidence-labels"><span class="label-tag label-nok"><span class="sr-only">etiqueta: </span>NOK</span><span class="label-tag label-checklist"><span class="sr-only">etiqueta: </span>chk 10 web</span><span class="label-tag label-requisito"><span class="sr-only">etiqueta: </span>R 1.2</span></div>
+                <div class="issue-content"><blockquote>
+<p>É possível selecionar as opções e as subopções do menu quer com rato quer com teclado.</p>
+<ul>
+<li><a href="https://amagovpt.github.io/kit-selo/checklists/checklist-10aspetos#n12">Ver requisito 1.2 da lista 10 aspetos</a></li>
+</ul>
+</blockquote>
+<h3><strong>Evidências:</strong></h3>
+<p>É possível navegar pelas opções do menu e submenu <strong>na área pública do site do BUPi</strong>, tanto na versão mobile como na versão desktop, mas <strong>existem dois problemas</strong>: </p>
+<ol>
+<li>No menu em versão desktop, a navegação por teclado e com leitor de ecrã apresenta um comportamento incorreto: ao aceder às subopções de um item, o foco fica retido nessas subopções, impedindo o regresso à opção principal através da navegação padrão por teclado. Na prática, o menu comporta-se como uma janela modal (pop-up), sendo necessário utilizar a tecla Escape para devolver o foco ao item principal.</li>
+</ol>
+<img src="https://github.com/user-attachments/assets/0637f442-e136-412e-9ff9-82a65700a629" alt="Image" class="evidence-image" style="max-width: 100%; height: auto; margin: 10px 0; border: 1px solid #ddd; border-radius: 4px;">
+
+
+
+<p><em>Figura 1 - Foco do teclado fica preso dentro das subopções do menu num loop</em></p>
+<ol start="2">
+<li>O leitor de ecrã não comunica se as opções e subopções estão expandidas ou colapsadas, apenas diz que existe um Submenu.</li>
+</ol>
+<img src="https://github.com/user-attachments/assets/81cfea13-446d-4e2f-a94a-316a96737c09" alt="Image" class="evidence-image" style="max-width: 100%; height: auto; margin: 10px 0; border: 1px solid #ddd; border-radius: 4px;">
+
+
+
+<p><em>Figura 2 - Área pública - Leitor de ecrã não comunica que a opção do menu está colapsada</em> </p>
+<h3><strong>Recomendações:</strong></h3>
+<ul>
+<li><p>Construir o menu de navegação de forma a garantir um comportamento verdadeiramente interativo, característico de um menu, em vez de funcionar como um pop-up que isola o restante conteúdo. A implementação deve seguir as diretrizes do <a href="https://react.agora.gov.pt/?path=/story/components-header--header-general-story">Ágora Design System</a>, assegurando uma interação consistente e acessível. Nomeadamente, deve permitir regressar ao item principal ao navegar para trás com Shift + Tab, bem como avançar para o item principal seguinte após percorrer todas as respetivas subopções.</p>
+</li>
+<li><p>Adicionar o atributo <code>aria-expanded</code> às opções do menu da área pública, como está estruturado no <a href="https://react.agora.gov.pt/?path=/story/components-header--header-navigation-five-or-less-links-story">Ágora Design Systems</a>, com o valor <code>aria-expanded="true"</code> para quando o botão está expandido e o valor <code>aria-expanded="false"</code> para quando está recolhido.  O mesmo deve ser aplicado ao botão do menu da área privada.</p>
+</li>
+</ul>
+<img src="https://github.com/user-attachments/assets/e1fed031-1376-4741-baa6-8a2aa9cf33f0" alt="Image" class="evidence-image" style="max-width: 100%; height: auto; margin: 10px 0; border: 1px solid #ddd; border-radius: 4px;">
+
+
+
+<p>  <em>Figura 3 - Ágora Design Systems tem o atributo aria-expanded nas opções do menu que comunica o estado de recolhido ou expandido</em></p>
+</div>
+              </li></ul>
+</div>
+<h4 class="requirement-title" id="req-chk10-r-1.3">Requisito 1.3 - As imagens-link, caso existam no menu, devem ter o correspondente equivalente alternativo em texto</h4>
+<div class="requirement-content">
+<p><span class="status-nok"><span class="sr-only">etiqueta: </span>NOK</span></p>
+<p>Lista de evidências recolhidas:</p>
+<ul class="evidence-list">
+
+              <li class="evidence-item">
+                <p><span class="visually-hidden">evidência: </span><a href="https://github.com/a11y-PT/report_053/issues/5" class="issue-link" target="_blank" rel="noopener noreferrer">issue #5</a> <strong>Área privada - O texto alternativo da imagem-link não é claro o suficiente</strong></p>
+                <div class="evidence-labels"><span class="label-tag label-nok"><span class="sr-only">etiqueta: </span>NOK</span><span class="label-tag label-checklist"><span class="sr-only">etiqueta: </span>chk 10 web</span><span class="label-tag label-requisito"><span class="sr-only">etiqueta: </span>R 1.3</span></div>
+                <div class="issue-content"><blockquote>
+<p>As imagem-link, caso existam no menu, devem ter o correspondente equivalente alternativo em texto.</p>
+<ul>
+<li><a href="https://amagovpt.github.io/kit-selo/checklists/checklist-10aspetos#n13">Ver requisito 1.3 da lista 10 aspetos</a></li>
+</ul>
+</blockquote>
+<h3><strong>Evidências:</strong></h3>
+<p>O leitor de ecrã lê o botão das iniciais como "AC", não dando contexto suficiente sobre ser um menu de perfil que contém subopções. </p>
+<img src="https://github.com/user-attachments/assets/f42bd973-ad58-443b-94d3-5dcb941c993b" alt="Image" class="evidence-image" style="max-width: 100%; height: auto; margin: 10px 0; border: 1px solid #ddd; border-radius: 4px;">
+
+
+
+<p><em>Figura 1 - O botão do menu apenas contém o <code>&lt;span&gt;</code> com as iniciais AC</em></p>
+<h3><strong>Recomendações:</strong></h3>
+<p>No botão das iniciais/perfil, uma vez que contém apenas as iniciais, para comunicar a função do botão, podem recorrer ao atributo <code>aria-label="Menu do perfil AC"</code>.</p>
+</div>
+              </li></ul>
+</div>
+<h4 class="requirement-title" id="req-chk10-r-2.1">Requisito 2.1 - Existe um título h1 marcado na página</h4>
+<div class="requirement-content">
+<p><span class="status-nok"><span class="sr-only">etiqueta: </span>NOK</span></p>
+<p>Lista de evidências recolhidas:</p>
+<ul class="evidence-list">
+
+              <li class="evidence-item">
+                <p><span class="visually-hidden">evidência: </span><a href="https://github.com/a11y-PT/report_053/issues/63" class="issue-link" target="_blank" rel="noopener noreferrer">issue #63</a> <strong>Área privada - O &lt;h1&gt; não está corretamente atribuído na página inicial e páginas interiores</strong></p>
+                <div class="evidence-labels"><span class="label-tag label-nok"><span class="sr-only">etiqueta: </span>NOK</span><span class="label-tag label-checklist"><span class="sr-only">etiqueta: </span>chk 10 web</span><span class="label-tag label-requisito"><span class="sr-only">etiqueta: </span>R 2.1</span></div>
+                <div class="issue-content"><blockquote>
+<p>Existe um título <code>&lt;h1&gt;</code> marcado na página.</p>
+<ul>
+<li><a href="https://amagovpt.github.io/kit-selo/checklists/checklist-10aspetos#n21">Ver requisito 2.1 da lista 10 aspetos</a></li>
+</ul>
+</blockquote>
+<h3><strong>Evidências:</strong></h3>
+<p>Na área privada, existem páginas sem <code>&lt;h1&gt;</code> e que começam a hierarquia com <code>&lt;h5&gt;</code>, como acontece nas páginas <a href="https://cidadao.bupi.gov.pt/Process_Search?ProcessId=0">Identificar terreno</a> e <a href="https://cidadao.bupi.gov.pt/Process_Consulting">Consultar processos</a>.</p>
+<img src="https://github.com/user-attachments/assets/d4ad599f-4251-4331-b9a7-fccf215e5864" alt="Image" class="evidence-image" style="max-width: 100%; height: auto; margin: 10px 0; border: 1px solid #ddd; border-radius: 4px;">
+
+
+
+<p><em>Figura 1 -Hierarquia de títulos da página "Identificar terreno" começa com título <code>&lt;h5&gt;</code>.</em> </p>
+<p>Existem páginas, cujo título principal visível da página é demasiado genérico para compreender o objetivo da página, como acontece na<a href="https://cidadao.bupi.gov.pt/Process_Search?ProcessId=0"> página com o título "Pesquisa" no separador do browser e "Hoje é um excelente dia para pesquisar" no corpo da página</a>. </p>
+<img src="https://github.com/user-attachments/assets/e5d940cf-955b-441a-bfcd-de2a312cdd84" alt="Image" class="evidence-image" style="max-width: 100%; height: auto; margin: 10px 0; border: 1px solid #ddd; border-radius: 4px;">
+
+
+
+<p><em>Figura 2 - Página com título genérico "Hoje é um excelente dia para pesquisar".</em> </p>
+<h3><strong>Recomendações:</strong></h3>
+<ul>
+<li><p>Na homepage, o <code>&lt;h1&gt;</code> deve estar atribuído ao logótipo para, em conjunto com um texto alternativo correto, melhorar o SEO da página. </p>
+<ul>
+<li>Neste caso, o <code>&lt;h1&gt;</code> da página inicial deve estar atribuído à imagem do logótipo que tem o texto visível BUPi - Balcão Único do Prédio. </li>
+<li>A imagem do logótipo tem como texto alternativo o <code>title</code> do link: <code>title="A minha área"</code>. A informação do title pode não ser interpretada corretamente por todas tecnologias de apoio, pelo que recomendamos optarem pela construção igual à área pública, como elemento <code>&lt;img&gt;</code> que contém o <code>svg</code> e atribuir o<code> alt="A minha área do BUPi - Balcão Único do Prédito"</code>.  Desta forma, reflete o conteúdo da imagem, mas distingue também da área pública.</li>
+</ul>
+</li>
+<li><p>Nas páginas interiores, o <code>&lt;h1&gt;</code> deve estar atribuído ao <strong>título VISÍVEL</strong> do conteúdo principal dessa página.<br>O <code>&lt;h1&gt;</code> deve ser claro, descritivo e refletir o propósito da página. Deve também ser coerente com o rótulo da ligação que conduz até ela. Por exemplo, o card “Identificar terreno” encaminha para uma página com o título “Hoje é um excelente dia para pesquisar”, o que não é consistente. Recomenda-se ajustar o título para “Identificar terreno”, garantindo alinhamento e melhorando a previsibilidade da navegação.</p>
+</li>
+</ul>
+</div>
+              </li>
+              <li class="evidence-item">
+                <p><span class="visually-hidden">evidência: </span><a href="https://github.com/a11y-PT/report_053/issues/6" class="issue-link" target="_blank" rel="noopener noreferrer">issue #6</a> <strong>Área púbica - O &lt;h1&gt; não está corretamente atribuído na página inicial e páginas interiores</strong></p>
+                <div class="evidence-labels"><span class="label-tag label-nok"><span class="sr-only">etiqueta: </span>NOK</span><span class="label-tag label-checklist"><span class="sr-only">etiqueta: </span>chk 10 web</span><span class="label-tag label-requisito"><span class="sr-only">etiqueta: </span>R 2.1</span></div>
+                <div class="issue-content"><blockquote>
+<p>Existe um título <code>&lt;h1&gt;</code> marcado na página.</p>
+<ul>
+<li><a href="https://amagovpt.github.io/kit-selo/checklists/checklist-10aspetos#n21">Ver requisito 2.1 da lista 10 aspetos</a></li>
+</ul>
+</blockquote>
+<p><strong>Evidencias:</strong><br>O elemento <code>&lt;h1&gt;</code> da página inicial está atualmente associado ao texto “Protege o seu terreno”, o que não é suficientemente descritivo nem permite identificar claramente o propósito da página inicial.</p>
+<img src="https://github.com/user-attachments/assets/2ef6d104-a736-47be-9668-9467d6a3486a" alt="Image" class="evidence-image" style="max-width: 100%; height: auto; margin: 10px 0; border: 1px solid #ddd; border-radius: 4px;">
+
+
+
+<p><em>Figura 1 - Na página inicial, o <code>&lt;h1&gt;</code> está atribuído a um texto genérico "Proteger o seu terreno é simples...".</em> </p>
+<p>Nas páginas interiores do site, existem páginas sem<code> &lt;h1&gt;</code> marcado, como acontece nas páginas de Notícias sobre <a href="https://bupi.gov.pt/pt/noticia/adesao-acores-bupi">Adesão dos Açores ao BUPi</a>. </p>
+<img src="https://github.com/user-attachments/assets/62cb220f-1da4-4e30-83d6-92243af34689" alt="Image" class="evidence-image" style="max-width: 100%; height: auto; margin: 10px 0; border: 1px solid #ddd; border-radius: 4px;">
+
+
+
+<p><em>Figura 2- Hierarquia de títulos sem <code>&lt;h1&gt;</code> da página "Adesão dos Açores ao BUPi".</em></p>
+<p>Outras páginas com o mesmo problema são: </p>
+<ul>
+<li><a href="https://bupi.gov.pt/pt/indicators">https://bupi.gov.pt/pt/indicators</a></li>
+<li><a href="https://bupi.gov.pt/pt/noticia/adesao-acores-bupi">https://bupi.gov.pt/pt/noticia/adesao-acores-bupi</a></li>
+<li><a href="https://bupi.gov.pt/pt/noticia/ebupi-disponibiliza-visualizador-pblico">https://bupi.gov.pt/pt/noticia/ebupi-disponibiliza-visualizador-pblico</a></li>
+<li><a href="https://bupi.gov.pt/pt/noticia/emigrante-chama">https://bupi.gov.pt/pt/noticia/emigrante-chama</a></li>
+<li><a href="https://bupi.gov.pt/pt/noticia/mitigacao-incendios">https://bupi.gov.pt/pt/noticia/mitigacao-incendios</a></li>
+<li><a href="https://bupi.gov.pt/pt/noticia/nova-plataforma-viseu">https://bupi.gov.pt/pt/noticia/nova-plataforma-viseu</a></li>
+<li><a href="https://bupi.gov.pt/pt/noticia/novo-coordenador-adjunto-ebupi">https://bupi.gov.pt/pt/noticia/novo-coordenador-adjunto-ebupi</a></li>
+<li><a href="https://bupi.gov.pt/pt/noticia/novo-visualizador-bupi">https://bupi.gov.pt/pt/noticia/novo-visualizador-bupi</a></li>
+</ul>
+<p>Além disso, existem páginas interiores com o <code>&lt;h1&gt;</code> atribuído a um texto visualmente escondido e um <code>&lt;h2&gt;</code> atribuído ao título visível da página. Esse título escondido e o visível são iguais e ambos são anunciados pelo leitor de ecrã. </p>
+<p>Este comportamento acontece em páginas como Como funciona, <a href="https://bupi.gov.pt/pt/passo-a-passo">Passo a Passo</a>, <a href="https://bupi.gov.pt/pt/municipios-aderentes">Municípios aderentes,</a>, <a href="https://bupi.gov.pt/pt/documentacao">Documentação</a>, <a href="https://bupi.gov.pt/pt/plataforma-e-app">Plataforma e App,</a> e nas restantes páginas ligadas ao menu que devem também rever. </p>
+<img src="https://github.com/user-attachments/assets/e8bf699b-c4db-48ff-bb80-c5b94440c14b" alt="Image" class="evidence-image" style="max-width: 100%; height: auto; margin: 10px 0; border: 1px solid #ddd; border-radius: 4px;">
+
+
+
+<p><em>Figura 3 - <code>&lt;h1&gt;</code> está atribuído a um texto visualmente escondido</em></p>
+<p>Para utilizadores de leitores de ecrã, que frequentemente navegam diretamente até ao primeiro cabeçalho para compreenderem em que página se encontram, esta abordagem de páginas sem <code>&lt;h1&gt; </code>, ou com <code>&lt;h1&gt;</code> e <code>&lt;h2&gt;</code> com o mesmo texto, dificulta a orientação.</p>
+<p>Existem também páginas com vários <code>&lt;h1&gt;</code>, como acontece na página <a href="https://bupi.gov.pt/pt/documentacao">Documentação</a>.</p>
+<img src="https://github.com/user-attachments/assets/3f37784f-3463-4ba1-a13d-81cd8c899b9b" alt="Image" class="evidence-image" style="max-width: 100%; height: auto; margin: 10px 0; border: 1px solid #ddd; border-radius: 4px;">
+
+
+
+<p><em>Figura 4 - Hierarquia com vários h1 na página Documentação</em></p>
+<p><strong>Recomendações:</strong></p>
+<ul>
+<li>Na homepage, o <code>&lt;h1&gt;</code> deve estar atribuído ao logótipo para, em conjunto com um texto alternativo correto, melhorar o SEO da página. <ul>
+<li>Neste caso, o <code>&lt;h1&gt;</code> da página inicial deve estar atribuído à imagem do logótipo, que tem o texto visível BUPi - Balcão Único do Prédio. </li>
+<li>A imagem do logótipo tem o <code>alt="Logotipo BUPi</code>, não estando correto. Devem remover a palavra "logótipo" do <code>alt </code> porque não acrescenta informação ao título e garantir que o texto alternativo é <code>alt="BUPi - Balcão Único do Prédio"</code>.</li>
+</ul>
+</li>
+<li>O texto "Proteger o seu terreno é simples. E não custa nada" deve ser estruturado como <code>&lt;h2&gt;</code>. </li>
+<li>Nas páginas interiores, o <code>&lt;h1&gt;</code> deve estar atribuído ao <strong>título VISÍVEL</strong> do conteúdo principal dessa página. O título escondido deve ser removido. </li>
+<li>Estas alterações devem ser aplicadas na versão portuguesa e inglesa do site.</li>
+</ul>
+</div>
+              </li></ul>
+</div>
+<h4 class="requirement-title" id="req-chk10-r-2.2">Requisito 2.2 - Existe uma marcação hierarquizada de títulos e subtítulos na página (h1...h6)</h4>
+<div class="requirement-content">
+<p><span class="status-nok"><span class="sr-only">etiqueta: </span>NOK</span></p>
+<p>Lista de evidências recolhidas:</p>
+<ul class="evidence-list">
+
+              <li class="evidence-item">
+                <p><span class="visually-hidden">evidência: </span><a href="https://github.com/a11y-PT/report_053/issues/62" class="issue-link" target="_blank" rel="noopener noreferrer">issue #62</a> <strong>Área privada - Há saltos na hierarquia de títulos</strong></p>
+                <div class="evidence-labels"><span class="label-tag label-nok"><span class="sr-only">etiqueta: </span>NOK</span><span class="label-tag label-checklist"><span class="sr-only">etiqueta: </span>chk 10 web</span><span class="label-tag label-requisito"><span class="sr-only">etiqueta: </span>R 2.2</span></div>
+                <div class="issue-content"><blockquote>
+<p>Existe uma marcação hierarquizada de títulos e subtítulos na página <code>&lt;h1&gt;...&lt;h6&gt;</code>.<br>– <a href="https://amagovpt.github.io/kit-selo/checklists/checklist-10aspetos#n22">ver requisito 2.2 na lista 10 aspetos</a></p>
+</blockquote>
+<h3><strong>Evidências:</strong></h3>
+<p>Na área privada, na <a href="https://cidadao.bupi.gov.pt/Process_Search?ProcessId=0">página "Identificar terreno"</a>, não existe nenhum título visível a identificar a página do formulário, ao não ser o texto genérico "Hoje é um excelente dia para pesquisar", que começa com <code>&lt;h5&gt;</code>, sem haver hierarquia anterior. </p>
+<img src="https://github.com/user-attachments/assets/d4ad599f-4251-4331-b9a7-fccf215e5864" alt="Image" class="evidence-image" style="max-width: 100%; height: auto; margin: 10px 0; border: 1px solid #ddd; border-radius: 4px;">
+
+
+
+<p><em>Figura 1 -Hierarquia de títulos da página "Identificar terreno" começa com título <code>&lt;h5&gt;</code>.</em> </p>
+<h3><strong>Recomendações:</strong></h3>
+<p>Devem rever todas páginas do site (homepage e interiores) para garantir que respeitam a hierarquia de títulos e subtítulos, o que implica:</p>
+<ul>
+<li>Ter 1 título <code>&lt;h1&gt;</code> (que marca o texto que representa o título da página ou, no caso da Homepage, o logo da entidade);</li>
+<li>Ter as várias secções do documento marcadas com <code>&lt;h2&gt;</code>;</li>
+<li>Ter as várias subseções de <code>&lt;h2&gt;</code> marcadas com <code>&lt;h3&gt;</code>, as subsecções destas com <code>&lt;h4&gt;</code> e assim hierarquicamente encadeados até <code>&lt;h6&gt;</code>;</li>
+<li>Evitar ter elementos de hierarquia inferior sem um elemento de hierarquia imediatamente superior (subseções órfãs). Por exemplo, ter um <code>&lt;h3&gt;</code> sem a correspondente <code>&lt;h2&gt;</code>, ou <code>&lt;h4&gt;</code> sem a correspondente <code>&lt;h3&gt;</code>.</li>
+</ul>
+</div>
+              </li>
+              <li class="evidence-item">
+                <p><span class="visually-hidden">evidência: </span><a href="https://github.com/a11y-PT/report_053/issues/7" class="issue-link" target="_blank" rel="noopener noreferrer">issue #7</a> <strong>Área pública - Há saltos na hierarquia de títulos</strong></p>
+                <div class="evidence-labels"><span class="label-tag label-nok"><span class="sr-only">etiqueta: </span>NOK</span><span class="label-tag label-checklist"><span class="sr-only">etiqueta: </span>chk 10 web</span><span class="label-tag label-requisito"><span class="sr-only">etiqueta: </span>R 2.2</span></div>
+                <div class="issue-content"><blockquote>
+<p>Existe uma marcação hierarquizada de títulos e subtítulos na página <code>&lt;h1&gt;...&lt;h6&gt;</code>.<br>– <a href="https://amagovpt.github.io/kit-selo/checklists/checklist-10aspetos#n22">ver requisito 2.2 na lista 10 aspetos</a></p>
+</blockquote>
+<h3><strong>Evidências:</strong></h3>
+<p>Na área pública, <a href="https://bupi.gov.pt/pt">na página inicial</a>, na secção "Quem pode ajudar", existe um salto hierarquia de <code>&lt;h2&gt;</code> para <code>&lt;h4&gt;</code>. Para utilizadores que navegam com o leitor de ecrã pelos cabeçalhos, esse salto de hierarquia deixa o conteúdo descontextualizado. </p>
+<img src="https://github.com/user-attachments/assets/1c630298-325a-4b08-9d70-273a5b92ce30" alt="Image" class="evidence-image" style="max-width: 100%; height: auto; margin: 10px 0; border: 1px solid #ddd; border-radius: 4px;">
+
+
+
+<p> <em>Figura 1 - Secção "Quem pode ajudar" com conteúdo marcado com <code>&lt;h4&gt;</code></em></p>
+<img src="https://github.com/user-attachments/assets/c4bae003-25fb-440c-914a-d7a5d24652ae" alt="Image" class="evidence-image" style="max-width: 100%; height: auto; margin: 10px 0; border: 1px solid #ddd; border-radius: 4px;">
+
+
+
+<p><em>Figura 2 - Hierarquia de títulos da secção "Pesquisa" e secção "Quem pode ajudar" mostram saltos de hierarquia</em> </p>
+<h3><strong>Recomendações:</strong></h3>
+<p>Devem rever todas páginas do site (homepage e interiores) para garantir que respeitam a hierarquia de títulos e subtítulos, o que implica: </p>
+<ul>
+<li>Ter 1 título <code>&lt;h1&gt;</code> (que marca o texto que representa o título da página ou, no caso da Homepage, o logo da entidade);</li>
+<li>Ter as várias secções do documento marcadas com <code>&lt;h2&gt;</code>;</li>
+<li>Ter as várias subseções de <code>&lt;h2&gt;</code> marcadas com <code>&lt;h3&gt;</code>, as subsecções destas com <code>&lt;h4&gt;</code> e assim hierarquicamente encadeados até <code>&lt;h6&gt;</code>;</li>
+<li>Evitar ter elementos de hierarquia inferior sem um elemento de hierarquia imediatamente superior (subseções órfãs). Por exemplo, ter um <code>&lt;h3&gt;</code> sem a correspondente <code>&lt;h2&gt;</code>, ou <code>&lt;h4&gt;</code> sem a correspondente <code>&lt;h3&gt;</code>.</li>
+</ul>
+</div>
+              </li></ul>
+</div>
+<h4 class="requirement-title" id="req-chk10-r-3.1">Requisito 3.1 - As células que constituem os cabeçalhos da tabela estão marcadas com o elemento th</h4>
+<div class="requirement-content">
+<p><span class="status-na"><span class="sr-only">etiqueta: </span>N/A</span></p>
+<p>Lista de evidências recolhidas:</p>
+<ul class="evidence-list">
+
+              <li class="evidence-item">
+                <p><span class="visually-hidden">evidência: </span><a href="https://github.com/a11y-PT/report_053/issues/8" class="issue-link" target="_blank" rel="noopener noreferrer">issue #8</a> <strong>O site do BUPi não apresenta tabelas na área pública e privada</strong></p>
+                <div class="evidence-labels"><span class="label-tag label-na"><span class="sr-only">etiqueta: </span>N/A</span><span class="label-tag label-checklist"><span class="sr-only">etiqueta: </span>chk 10 web</span><span class="label-tag label-requisito"><span class="sr-only">etiqueta: </span>R 3.1</span></div>
+                <div class="issue-content"><blockquote>
+<p>As células que constituem os cabeçalhos da tabela estão marcadas com o elemento <code>&lt;th&gt;</code>.<br>– <a href="https://amagovpt.github.io/kit-selo/checklists/checklist-10aspetos#n31">ver requisito 3.1 na lista 10 aspetos</a></p>
+</blockquote>
+<h3><strong>Evidências:</strong></h3>
+<p>O site do BUPi não apresenta tabelas. </p>
+</div>
+              </li></ul>
+</div>
+<h4 class="requirement-title" id="req-chk10-r-3.2">Requisito 3.2 - A legenda da tabela está marcada com o elemento caption</h4>
+<div class="requirement-content">
+<p><span class="status-na"><span class="sr-only">etiqueta: </span>N/A</span></p>
+<p>Lista de evidências recolhidas:</p>
+<ul class="evidence-list">
+
+              <li class="evidence-item">
+                <p><span class="visually-hidden">evidência: </span><a href="https://github.com/a11y-PT/report_053/issues/9" class="issue-link" target="_blank" rel="noopener noreferrer">issue #9</a> <strong>O site do BUPi não apresenta tabelas na área pública e privada</strong></p>
+                <div class="evidence-labels"><span class="label-tag label-na"><span class="sr-only">etiqueta: </span>N/A</span><span class="label-tag label-checklist"><span class="sr-only">etiqueta: </span>chk 10 web</span><span class="label-tag label-requisito"><span class="sr-only">etiqueta: </span>R 3.2</span></div>
+                <div class="issue-content"><blockquote>
+<p>A legenda da tabela está marcada com o elemento <code>&lt;caption&gt;</code><br>– <a href="https://amagovpt.github.io/kit-selo/checklists/checklist-10aspetos#n32">ver requisito 3.2 na lista 10 aspetos</a></p>
+</blockquote>
+<h3><strong>Evidências:</strong></h3>
+<p>O site do BUPi não apresenta tabelas.</p>
+</div>
+              </li></ul>
+</div>
+<h4 class="requirement-title" id="req-chk10-r-4.1">Requisito 4.1 - Ao clicar com o rato na etiqueta, o cursor surge no respetivo campo de edição</h4>
+<div class="requirement-content">
+<p><span class="status-nok"><span class="sr-only">etiqueta: </span>NOK</span></p>
+<p>Lista de evidências recolhidas:</p>
+<ul class="evidence-list">
+
+              <li class="evidence-item">
+                <p><span class="visually-hidden">evidência: </span><a href="https://github.com/a11y-PT/report_053/issues/67" class="issue-link" target="_blank" rel="noopener noreferrer">issue #67</a> <strong>Área privada - Existem caixas de verificação não envolvidos em elementos &lt;fieldset&gt;</strong></p>
+                <div class="evidence-labels"><span class="label-tag label-nok"><span class="sr-only">etiqueta: </span>NOK</span><span class="label-tag label-checklist"><span class="sr-only">etiqueta: </span>chk 10 web</span><span class="label-tag label-requisito"><span class="sr-only">etiqueta: </span>R 4.1</span></div>
+                <div class="issue-content"><blockquote>
+<p>Ao clicar com o rato na etiqueta, o cursor surge no respetivo campo de edição.<br>– <a href="https://amagovpt.github.io/kit-selo/checklists/checklist-10aspetos#n41">ver requisito 4.1 na lista 10 aspetos</a></p>
+</blockquote>
+<p>Os grupos de checkboxes do formulário na página <a href="https://cidadao.bupi.gov.pt/Process_Search?ProcessId=0">Pesquisa </a>não estão envolvidos em elementos <code>&lt;fieldset&gt;</code>. </p>
+<img src="https://github.com/user-attachments/assets/c5344b38-bdd1-4f29-8bf8-ae83db72e6c7" alt="Image" class="evidence-image" style="max-width: 100%; height: auto; margin: 10px 0; border: 1px solid #ddd; border-radius: 4px;">
+
+
+
+<p><em>Figura 1 - Etiqueta aplicada incorretamente ao grupo de checkboxes</em></p>
+<p>As checkboxes “Rústico” e “Urbano” são respostas possíveis à legenda “*Natureza da matriz". No entanto, essa associação não existe semanticamente e o leitor de ecrã lê cada checkbox como sendo 1 de 1, em vez de 1 de 2. </p>
+<h3><strong>Recomendações:</strong></h3>
+<p>Devem rever todos os formulários deste tipo, para que os <em>radiobuttons</em> sejam colocados dentro de um elemento <code>&lt;fieldset&gt;</code>, elemento esse que deve ter como primeiro filho um elemento <code>&lt;legend&gt;</code> contendo o texto “Natureza da matriz”, da seguinte forma:</p>
+<pre><code>&lt;fieldset&gt;
+  &lt;legend&gt;*Natureza da matriz&lt;/legend&gt;
+  &lt;input id = " rchk1 " type = "checkbox"&gt;
+  &lt;label for = "chk11"&gt;Rústico&lt;/label&gt;
+  &lt;input id = "chk2" type = "checkbox"&gt;
+  &lt;label for = "chk2"&gt;Urbano&lt;/label&gt;
+&lt;/fieldset&gt;
+</code></pre>
+</div>
+              </li>
+              <li class="evidence-item">
+                <p><span class="visually-hidden">evidência: </span><a href="https://github.com/a11y-PT/report_053/issues/66" class="issue-link" target="_blank" rel="noopener noreferrer">issue #66</a> <strong>Área pública - Existem caixas de verificação não envolvidos em elementos &lt;fieldset&gt;</strong></p>
+                <div class="evidence-labels"><span class="label-tag label-nok"><span class="sr-only">etiqueta: </span>NOK</span><span class="label-tag label-checklist"><span class="sr-only">etiqueta: </span>chk 10 web</span><span class="label-tag label-requisito"><span class="sr-only">etiqueta: </span>R 4.1</span></div>
+                <div class="issue-content"><blockquote>
+<p>Ao clicar com o rato na etiqueta, o cursor surge no respetivo campo de edição.<br>– <a href="https://amagovpt.github.io/kit-selo/checklists/checklist-10aspetos#n41">ver requisito 4.1 na lista 10 aspetos</a></p>
+</blockquote>
+<h3><strong>Evidências:</strong></h3>
+<p>Os grupos de checkboxes do formulário na página <a href="https://bupi.gov.pt/pt/formulario-de-registo">Formulário de Registo</a> não estão envolvidos em elementos <code>&lt;fieldset&gt;</code>:</p>
+<img src="https://github.com/user-attachments/assets/b2854b3f-c6be-473d-a718-c302d009d02f" alt="Image" class="evidence-image" style="max-width: 100%; height: auto; margin: 10px 0; border: 1px solid #ddd; border-radius: 4px;">
+
+
+
+<p><em>Figura 1 - Etiqueta aplicada incorretamente ao grupo de checkboxes</em></p>
+<p>As checkboxes “Município”, “Vários Municípios - CIM” e “Entidades gestores” são respostas possíveis à legenda “<em>Inscrição Município ou CIM</em>”. No entanto, essa associação não existe semanticamente.</p>
+<h3><strong>Recomendações:</strong></h3>
+<p>Devem rever todos os formulários deste tipo, para que os <em>radiobuttons</em> sejam colocados dentro de um elemento <code>&lt;fieldset&gt;</code>, elemento esse que deve ter como primeiro filho um elemento <code>&lt;legend&gt;</code> contendo o texto “*Inscrição Município ou CM:”, da seguinte forma:</p>
+<pre><code>&lt;fieldset&gt;
+  &lt;legend&gt;*Inscrição Município ou CIM&lt;/legend&gt;
+  &lt;input id = " rchk1 " type = "checkbox"&gt;
+  &lt;label for = "chk11"&gt;Município&lt;/label&gt;
+  &lt;input id = "chk2" type = "checkbox"&gt;
+  &lt;label for = "chk2"&gt;Vários municípios - CIM&lt;/label&gt;
+  &lt;input id = "chk3" type = "checkbox"&gt;
+  &lt;label for = "chk3"&gt;Entidades gestoras&lt;/label&gt;
+....
+&lt;/fieldset&gt;
+</code></pre>
+</div>
+              </li>
+              <li class="evidence-item">
+                <p><span class="visually-hidden">evidência: </span><a href="https://github.com/a11y-PT/report_053/issues/64" class="issue-link" target="_blank" rel="noopener noreferrer">issue #64</a> <strong>Área privada - Campos de edição sem label associada</strong></p>
+                <div class="evidence-labels"><span class="label-tag label-nok"><span class="sr-only">etiqueta: </span>NOK</span><span class="label-tag label-checklist"><span class="sr-only">etiqueta: </span>chk 10 web</span><span class="label-tag label-requisito"><span class="sr-only">etiqueta: </span>R 4.1</span></div>
+                <div class="issue-content"><blockquote>
+<p>Ao clicar com o rato na etiqueta, o cursor surge no respetivo campo de edição.<br>– <a href="https://amagovpt.github.io/kit-selo/checklists/checklist-10aspetos#n41">ver requisito 4.1 na lista 10 aspetos</a></p>
+</blockquote>
+<h3><strong>Evidências:</strong></h3>
+<p>Na área privada, na página <a href="https://cidadao.bupi.gov.pt/Process_Search?ProcessId=0">Identificar terreno</a>, por exemplo, existem campos com labels visíveis que não estão associadas aos respetivos campos. </p>
+<img src="https://github.com/user-attachments/assets/4e079503-1211-4518-8fd4-095c0d947c12" alt="Image" class="evidence-image" style="max-width: 100%; height: auto; margin: 10px 0; border: 1px solid #ddd; border-radius: 4px;">
+
+
+
+<p><em>Figura 1 -  A label do campo Número da Matriz não está associada ao campo</em></p>
+<h3><strong>Recomendações:</strong></h3>
+<p>Devem garantir que <strong>todos os campos de edição da privada</strong>, dropdowns, pesquisa, date pickers, são estruturados como <input> e com uma <label>. O <code>for</code> da <code>&lt;label&gt;</code> deve ter o mesmo valor que o <code>id</code> do <code>&lt;input&gt;</code>, para que o leitor de ecrã consiga comunicar a informação da label do campo quando foca no componente, assim como o cursor surgir no respectivo campo de edição quando se clica na etiqueta.</label></p>
+</div>
+              </li>
+              <li class="evidence-item">
+                <p><span class="visually-hidden">evidência: </span><a href="https://github.com/a11y-PT/report_053/issues/10" class="issue-link" target="_blank" rel="noopener noreferrer">issue #10</a> <strong>Área pública - Campos de edição sem label visível e sem label associada</strong></p>
+                <div class="evidence-labels"><span class="label-tag label-nok"><span class="sr-only">etiqueta: </span>NOK</span><span class="label-tag label-checklist"><span class="sr-only">etiqueta: </span>chk 10 web</span><span class="label-tag label-requisito"><span class="sr-only">etiqueta: </span>R 4.1</span></div>
+                <div class="issue-content"><blockquote>
+<p>Ao clicar com o rato na etiqueta, o cursor surge no respetivo campo de edição.<br>– <a href="https://amagovpt.github.io/kit-selo/checklists/checklist-10aspetos#n41">ver requisito 4.1 na lista 10 aspetos</a></p>
+</blockquote>
+<h3><strong>Evidências:</strong></h3>
+<p>Na área pública, existem campos de edição que não têm label, como é o caso do campo da pesquisa no topo da página do site.</p>
+<img src="https://github.com/user-attachments/assets/d8d032bf-2994-4fbb-aaa3-3253ced73f68" alt="Image" class="evidence-image" style="max-width: 100%; height: auto; margin: 10px 0; border: 1px solid #ddd; border-radius: 4px;">
+
+
+
+<p><em>Figura 1 - Campo de pesquisa no topo da página não tem label</em> </p>
+<p>O mesmo acontece com o campo da pesquisa da página <a href="https://bupi.gov.pt/pt/noticias-e-artigos?page=1">Notícias e Artigos</a>, do <a href="https://bupi.gov.pt/pt/glossario">Glossário</a> e com o campo do email na <a href="https://bupi.gov.pt/pt">página inicial</a> para subscrever a newsletter. </p>
+<img src="https://github.com/user-attachments/assets/9275b8eb-c679-4c52-b5a1-a61d861a6ec1" alt="Image" class="evidence-image" style="max-width: 100%; height: auto; margin: 10px 0; border: 1px solid #ddd; border-radius: 4px;">
+
+
+
+<p><em>Figura 2 - Campo de pesquisa da página Notícias e Artigos</em></p>
+<img src="https://github.com/user-attachments/assets/f70c8f73-88e9-4c0a-a4ec-a3f82b9e6e24" alt="Image" class="evidence-image" style="max-width: 100%; height: auto; margin: 10px 0; border: 1px solid #ddd; border-radius: 4px;">
+
+
+
+<p><em>Figura 3 - Campo para subscrever newsletter na página inicial</em></p>
+<h3><strong>Recomendações:</strong></h3>
+<p>Devem garantir que <strong>todos os campos de edição da área pública</strong>, dropdowns, pesquisa, date pickers, são estruturados como <input> e com uma <label>. O <code>for</code> da <code>&lt;label&gt;</code> deve ter o mesmo valor que o <code>id</code> do <code>&lt;input&gt;</code>, para que o leitor de ecrã consiga comunicar a informação da label do campo quando foca no componente, assim como o cursor surgir no respectivo campo de edição quando se clica na etiqueta.</label></p>
+</div>
+              </li></ul>
+</div>
+<h4 class="requirement-title" id="req-chk10-r-4.2">Requisito 4.2 - É possível identificar os campos de preenchimento obrigatório quando se usa apenas um leitor de ecrã</h4>
+<div class="requirement-content">
+<p><span class="status-nok"><span class="sr-only">etiqueta: </span>NOK</span></p>
+<p>Lista de evidências recolhidas:</p>
+<ul class="evidence-list">
+
+              <li class="evidence-item">
+                <p><span class="visually-hidden">evidência: </span><a href="https://github.com/a11y-PT/report_053/issues/65" class="issue-link" target="_blank" rel="noopener noreferrer">issue #65</a> <strong>Área privada - Não há informação sobre o significado dos asteriscos nos campos de preenchimento obrigatório</strong></p>
+                <div class="evidence-labels"><span class="label-tag label-nok"><span class="sr-only">etiqueta: </span>NOK</span><span class="label-tag label-checklist"><span class="sr-only">etiqueta: </span>chk 10 web</span><span class="label-tag label-requisito"><span class="sr-only">etiqueta: </span>R 4.2</span></div>
+                <div class="issue-content"><blockquote>
+<p>É possível identificar os campos de preenchimento obrigatório quando se usa apenas um leitor de ecrã.<br>– <a href="https://amagovpt.github.io/kit-selo/checklists/checklist-10aspetos#n42">ver requisito 4.2 na lista 10 aspetos</a></p>
+</blockquote>
+<h3><strong>Evidências:</strong></h3>
+<p>Os campos dos formulários que existem no site, como os campos na página apresentam um asterisco de cor vermelha na suas labels, no entanto, não é apresentada nenhuma definição do significado dos asteriscos no fundo ou no início do formulário. </p>
+<img src="https://github.com/user-attachments/assets/06f9e455-d433-4be2-a954-a1cf1fdc0d15" alt="Image" class="evidence-image" style="max-width: 100%; height: auto; margin: 10px 0; border: 1px solid #ddd; border-radius: 4px;">
+
+
+
+<p><em>Figura 1 - Campos do formulário de Pesquisa com asterisco vermelho</em></p>
+<p>Embora os campos tenham o atributo <code>required </code>na construção HTML e transmitem a informação para pessoas que navegam com leitor de ecrã, a mesma informação não é imediatamente clara para quem depende da visão. </p>
+<h3><strong>Recomendações:</strong></h3>
+<p>Devem rever todos os formulários do site para que tenham o significado do asterisco. </p>
+<p>Os campos obrigatórios dos formulários devem estar devidamente identificados como tal. </p>
+<p>Idealmente, devem apresentar o texto “Obrigatório” à frente da legenda do campo. No entanto,<strong>pode-se colocar um * no campo obrigatório</strong>, <strong>desde que o significado do * seja mencionado</strong>, preferencialmente, no início do formulário (exemplo: * Preenchimento obrigatório).</p>
+</div>
+              </li>
+              <li class="evidence-item">
+                <p><span class="visually-hidden">evidência: </span><a href="https://github.com/a11y-PT/report_053/issues/11" class="issue-link" target="_blank" rel="noopener noreferrer">issue #11</a> <strong>Área pública - Não há informação sobre o significado dos asteriscos nos campos de preenchimento obrigatório</strong></p>
+                <div class="evidence-labels"><span class="label-tag label-nok"><span class="sr-only">etiqueta: </span>NOK</span><span class="label-tag label-checklist"><span class="sr-only">etiqueta: </span>chk 10 web</span><span class="label-tag label-requisito"><span class="sr-only">etiqueta: </span>R 4.2</span></div>
+                <div class="issue-content"><blockquote>
+<p>É possível identificar os campos de preenchimento obrigatório quando se usa apenas um leitor de ecrã.<br>– <a href="https://amagovpt.github.io/kit-selo/checklists/checklist-10aspetos#n42">ver requisito 4.2 na lista 10 aspetos</a></p>
+</blockquote>
+<h3><strong>Evidências:</strong></h3>
+<p>Os campos dos formulários que existem no site, como os campos na página <a href="https://bupi.gov.pt/pt/formulario-de-registo">formulário de registo</a> e <a href="https://bupi.gov.pt/pt/contactos">Contactos</a> apresentam um asterisco de cor vermelha na suas labels, no entanto, não é apresentada nenhuma definição do significado dos asteriscos no fundo ou no início do formulário. </p>
+<img src="https://github.com/user-attachments/assets/21ed5a74-52d3-4bc4-bafd-af6606e0c39a" alt="Image" class="evidence-image" style="max-width: 100%; height: auto; margin: 10px 0; border: 1px solid #ddd; border-radius: 4px;">
+
+
+
+<p><em>Figura 1 - Campos do formulário de Registo com asterisco vermelho</em></p>
+<p>Embora os campos tenham o atributo <code>required </code>na construção HTML e transmitem a informação para pessoas que navegam com leitor de ecrã, a mesma informação não é imediatamente clara para quem depende da visão. </p>
+<h3><strong>Recomendações:</strong></h3>
+<p>Devem rever todos os formulários do site para que tenham o significado do asterisco. </p>
+<p>Os campos obrigatórios dos formulários devem estar devidamente identificados como tal. </p>
+<p>Idealmente, devem apresentar o texto “Obrigatório” à frente da legenda do campo. No entanto,<strong>pode-se colocar um * no campo obrigatório</strong>, <strong>desde que o significado do * seja mencionado</strong>, preferencialmente, no início do formulário (exemplo: * Preenchimento obrigatório).</p>
+</div>
+              </li></ul>
+</div>
+<h4 class="requirement-title" id="req-chk10-r-4.3">Requisito 4.3 - É possível localizar e ler as mensagens de erro usando apenas um leitor de ecrã</h4>
+<div class="requirement-content">
+<p><span class="status-ok"><span class="sr-only">etiqueta: </span>OK</span> (no entanto contém 1 melhoria que se recomenda efetuar)</p>
+<p>Lista de evidências recolhidas:</p>
+<ul class="evidence-list">
+
+              <li class="evidence-item">
+                <p><span class="visually-hidden">evidência: </span><a href="https://github.com/a11y-PT/report_053/issues/12" class="issue-link" target="_blank" rel="noopener noreferrer">issue #12</a> <strong>A mensagem de erro está perto do campo mas não está associada no código</strong></p>
+                <div class="evidence-labels"><span class="label-tag label-melhoria"><span class="sr-only">etiqueta: </span>melhoria</span><span class="label-tag label-checklist"><span class="sr-only">etiqueta: </span>chk 10 web</span><span class="label-tag label-requisito"><span class="sr-only">etiqueta: </span>R 4.3</span></div>
+                <div class="issue-content"><blockquote>
+<p>É possível localizar e ler as mensagens de erro usando apenas um leitor de ecrã.<br>– <a href="https://amagovpt.github.io/kit-selo/checklists/checklist-10aspetos#n43">ver requisito 4.3 na lista 10 aspetos</a></p>
+</blockquote>
+<p><strong>Evidencias:</strong><br>As mensagens de erro que surgem durante o preenchimento de um formulário devem estar associadas aos respectivos campos. Idealmente, as mensagens devem estar posicionadas próximas dos campos a que dizem respeito, o que se verifica. </p>
+<p>No entanto, quando se navega apenas com a tecla Tab pelos campos do formulário, a informação do erro não é comunicada, sendo necessário navegar pelos elementos um a um até chegar especificamente à mensagem de erro. </p>
+<img src="https://github.com/user-attachments/assets/6382da83-70a0-4963-9905-5350910f3e6e" alt="Image" class="evidence-image" style="max-width: 100%; height: auto; margin: 10px 0; border: 1px solid #ddd; border-radius: 4px;">
+
+
+
+<p><em>Figura 1 - Leitor de ecrã quando está focado no campo do formulário de <a href="https://bupi.gov.pt/pt/contactos">Contactos</a> não lê a mensagem de erro</em></p>
+<p><strong>Recomendações:</strong><br>Deve-se aplicar o atributo <code>aria-describedby="" </code>para que as mensagens de erro fiquem associadas aos respectivos campos e que essa associação seja detectada pelos leitores de ecrã.</p>
+<p>Podem identificar a boa prática implementada no <a href="https://cidadao.bupi.gov.pt/Process_Search?ProcessId=0">formulário de Pesquisa da área privada</a>, no erro de NIF inválido. </p>
+<img src="https://github.com/user-attachments/assets/03045cd5-8f74-4734-b5f1-84bdea14482c" alt="Image" class="evidence-image" style="max-width: 100%; height: auto; margin: 10px 0; border: 1px solid #ddd; border-radius: 4px;">
+
+
+
+<p><em>Figura 2 - Mensagem do NIF inválido está associada ao campo através do atributo <code>aria-describedby</code></em> </p>
+</div>
+              </li></ul>
+</div>
+<h4 class="requirement-title" id="req-chk10-r-5.1">Requisito 5.1 - A imagem ou gráfico tem um equivalente alternativo em texto curto e correto</h4>
+<div class="requirement-content">
+<p><span class="status-nok"><span class="sr-only">etiqueta: </span>NOK</span></p>
+<p>Lista de evidências recolhidas:</p>
+<ul class="evidence-list">
+
+              <li class="evidence-item">
+                <p><span class="visually-hidden">evidência: </span><a href="https://github.com/a11y-PT/report_053/issues/69" class="issue-link" target="_blank" rel="noopener noreferrer">issue #69</a> <strong>Área pública - Imagens decorativas com texto alternativo errado</strong></p>
+                <div class="evidence-labels"><span class="label-tag label-melhoria"><span class="sr-only">etiqueta: </span>melhoria</span><span class="label-tag label-checklist"><span class="sr-only">etiqueta: </span>chk 10 web</span><span class="label-tag label-requisito"><span class="sr-only">etiqueta: </span>R 5.1</span></div>
+                <div class="issue-content"><blockquote>
+<p>A imagem ou gráfico tem um equivalente em texto curto e correto.<br>– <a href="https://amagovpt.github.io/kit-selo/checklists/checklist-10aspetos#n51">ver requisito 5.1 na lista 10 aspetos</a></p>
+</blockquote>
+<h3><strong>Evidências:</strong></h3>
+<p>Existem imagens decorativas com texto alternativo a descrever o seu conteúdo. Por exemplo, na página <a href="https://bupi.gov.pt/pt/sobre-nos">Sobre Nós</a>, existem várias imagens decorativas no meio do conteúdo, como da "Vista aérea dos terrenos" e do "Boneco BUPi com a bandeira".</p>
+<img src="https://github.com/user-attachments/assets/725c0c8a-1917-41ca-8f70-14b6b5c51031" alt="Image" class="evidence-image" style="max-width: 100%; height: auto; margin: 10px 0; border: 1px solid #ddd; border-radius: 4px;">
+
+
+
+<p><em>Figura 1 - Imagens decorativas do conteúdo com texto alternativo</em></p>
+<p>Na secção das notícias na<a href="https://bupi.gov.pt/pt"> página inicial</a>, e em várias páginas secundárias, existem cards que contêm imagens. Essas imagens acabam por acrescentar informação repetida ou redundante do link, não acrescentando informação, sendo decorativas. </p>
+<img src="https://github.com/user-attachments/assets/06cda3ab-4a7a-44d6-9b2d-e0fab516f616" alt="Image" class="evidence-image" style="max-width: 100%; height: auto; margin: 10px 0; border: 1px solid #ddd; border-radius: 4px;">
+
+
+
+<p><em>Figura 2 - As imagens decorativas dos cards com texto alternativo</em></p>
+<img src="https://github.com/user-attachments/assets/0455f625-96fd-4323-b597-fa415fd35a01" alt="Image" class="evidence-image" style="max-width: 100%; height: auto; margin: 10px 0; border: 1px solid #ddd; border-radius: 4px;">
+
+
+
+<p><em>Figura 3 - As imagens laterais decorativas com texto alternativo.</em> </p>
+<h3><strong>Recomendações:</strong></h3>
+<p>Recomendamos a revisão das imagens decorativas para que incluam um texto alternativo nulo da seguinte forma: <code>&lt;img…alt=””&gt;</code>.  Se a estrutura não for um <code>&lt;img&gt;</code>, optar pelo atributo<code> aria-hidden="true"</code>. Em alternativa, estas podem ser colocadas em CSS como background-image.</p>
+</div>
+              </li>
+              <li class="evidence-item">
+                <p><span class="visually-hidden">evidência: </span><a href="https://github.com/a11y-PT/report_053/issues/68" class="issue-link" target="_blank" rel="noopener noreferrer">issue #68</a> <strong>Área privada - Imagens funcionais com texto alternativo errado</strong></p>
+                <div class="evidence-labels"><span class="label-tag label-nok"><span class="sr-only">etiqueta: </span>NOK</span><span class="label-tag label-checklist"><span class="sr-only">etiqueta: </span>chk 10 web</span><span class="label-tag label-requisito"><span class="sr-only">etiqueta: </span>R 5.1</span></div>
+                <div class="issue-content"><p>A imagem ou gráfico tem um equivalente em texto curto e correto.<br>– <a href="https://amagovpt.github.io/kit-selo/checklists/checklist-10aspetos#n51">ver requisito 5.1 na lista 10 aspetos</a></p>
+<p><strong>Evidências:</strong></p>
+<p><strong>Recomendações:</strong></p>
+</div>
+              </li>
+              <li class="evidence-item">
+                <p><span class="visually-hidden">evidência: </span><a href="https://github.com/a11y-PT/report_053/issues/13" class="issue-link" target="_blank" rel="noopener noreferrer">issue #13</a> <strong>Área pública - Imagem funcional com texto alternativo errado e sem texto alternativo</strong></p>
+                <div class="evidence-labels"><span class="label-tag label-nok"><span class="sr-only">etiqueta: </span>NOK</span><span class="label-tag label-checklist"><span class="sr-only">etiqueta: </span>chk 10 web</span><span class="label-tag label-requisito"><span class="sr-only">etiqueta: </span>R 5.1</span></div>
+                <div class="issue-content"><blockquote>
+<p>A imagem ou gráfico tem um equivalente em texto curto e correto.<br>– <a href="https://amagovpt.github.io/kit-selo/checklists/checklist-10aspetos#n51">ver requisito 5.1 na lista 10 aspetos</a></p>
+</blockquote>
+<h3><strong>Evidências:</strong></h3>
+<p>Na <a href="https://bupi.gov.pt/pt">página inicial</a>, o logótipo tem um <code>alt="Logótipo BUPi".</code></p>
+<img src="https://github.com/user-attachments/assets/30ee79d1-c477-47f6-a238-fd4fe142f8f1" alt="Image" class="evidence-image" style="max-width: 100%; height: auto; margin: 10px 0; border: 1px solid #ddd; border-radius: 4px;">
+
+
+
+<p><em>Figura 1 - Imagem funcional com texto alternativo a incluir termo "Logótipo".</em> </p>
+<p>No <a href="https://bupi.gov.pt/mapaPublicoBUPi.html">Mapa Público</a>, existem imagens das formas dos cadastros com texto alternativo errado e são lidas pelo leitor de ecrãs apenas como "Pré-visualizar. </p>
+<img src="https://github.com/user-attachments/assets/e043418e-68ed-449f-a852-8a5578a3facf" alt="Image" class="evidence-image" style="max-width: 100%; height: auto; margin: 10px 0; border: 1px solid #ddd; border-radius: 4px;">
+
+
+
+<p><em>Figura 2 - Texto alternativo da forma dos cadastros</em></p>
+<p><strong>Recomendações:</strong></p>
+<ul>
+<li><p>Deve evitar-se a utilização do termo “logótipo” no texto alternativo, uma vez que essa informação não acrescenta valor para utilizadores de tecnologias de apoio. O texto alternativo deve descrever de forma concisa e significativa o conteúdo da imagem funcional. Por exemplo, em vez de “logótipo do BUPi”, deve optar-se por "BUPi - Balcão Único do Prédio”. </p>
+</li>
+<li><p>Devem garantir que a forma dos cadastro é descrita no texto alternativo da imagem. Por exemplo, no caso do Cadastro Predial, teria de ser estruturado como <code>aria-label="área com fundo amarelo"</code>.</p>
+</li>
+</ul>
+</div>
+              </li></ul>
+</div>
+<h4 class="requirement-title" id="req-chk10-r-5.2">Requisito 5.2 - O gráfico é acompanhado de uma descrição longa</h4>
+<div class="requirement-content">
+<p><span class="status-nok"><span class="sr-only">etiqueta: </span>NOK</span></p>
+<p>Lista de evidências recolhidas:</p>
+<ul class="evidence-list">
+
+              <li class="evidence-item">
+                <p><span class="visually-hidden">evidência: </span><a href="https://github.com/a11y-PT/report_053/issues/14" class="issue-link" target="_blank" rel="noopener noreferrer">issue #14</a> <strong>O mapa e os gráficos Power BI têm alguma informação que não é possível aceder com teclado e leitor de ecrã</strong></p>
+                <div class="evidence-labels"><span class="label-tag label-nok"><span class="sr-only">etiqueta: </span>NOK</span><span class="label-tag label-checklist"><span class="sr-only">etiqueta: </span>chk 10 web</span><span class="label-tag label-requisito"><span class="sr-only">etiqueta: </span>R 5.2</span></div>
+                <div class="issue-content"><blockquote>
+<p>O gráfico é acompanhado de uma descrição longa.<br>– <a href="https://amagovpt.github.io/kit-selo/checklists/checklist-10aspetos#n52">ver requisito 5.2 na lista 10 aspetos</a></p>
+</blockquote>
+<h3><strong>Evidências:</strong></h3>
+<p>A página<a href="https://bupi.gov.pt/pt/indicadores"> Indicadores</a> e do <a href="https://bupi.gov.pt/mapaPublicoBUPi.html">Mapa Público</a> apresentam gráficos complexos que necessitam de informação para pessoas que navegam com leitor de ecrã possam compreender. </p>
+<img src="https://github.com/user-attachments/assets/8e8199c0-876d-4fa5-bf85-dcaa0bd13007" alt="Image" class="evidence-image" style="max-width: 100%; height: auto; margin: 10px 0; border: 1px solid #ddd; border-radius: 4px;">
+
+
+
+<p><em>Figura 1 - Gráficos da página Indicadores</em></p>
+<img src="https://github.com/user-attachments/assets/b5c5942c-7021-4efc-b47a-030f4d3dbdb6" alt="Image" class="evidence-image" style="max-width: 100%; height: auto; margin: 10px 0; border: 1px solid #ddd; border-radius: 4px;">
+
+
+
+<p><em>Figura 2 - Mapa Público</em></p>
+<img src="https://github.com/user-attachments/assets/e043418e-68ed-449f-a852-8a5578a3facf" alt="Image" class="evidence-image" style="max-width: 100%; height: auto; margin: 10px 0; border: 1px solid #ddd; border-radius: 4px;">
+
+
+
+<p>_Figura 3 - A forma dos cadastro é apenas comunicada pelo leitor de ecrã como Pré-visualizar _ </p>
+<h3><strong>Recomendações:</strong></h3>
+</div>
+              </li></ul>
+</div>
+<h4 class="requirement-title" id="req-chk10-r-5.3">Requisito 5.3 - As imagens-link têm um equivalente alternativo correto</h4>
+<div class="requirement-content">
+<p><span class="status-nok"><span class="sr-only">etiqueta: </span>NOK</span></p>
+<p>Lista de evidências recolhidas:</p>
+<ul class="evidence-list">
+
+              <li class="evidence-item">
+                <p><span class="visually-hidden">evidência: </span><a href="https://github.com/a11y-PT/report_053/issues/70" class="issue-link" target="_blank" rel="noopener noreferrer">issue #70</a> <strong>Área privada - Imagens-link sem texto alternativo ou com termos redundantes</strong></p>
+                <div class="evidence-labels"><span class="label-tag label-nok"><span class="sr-only">etiqueta: </span>NOK</span><span class="label-tag label-checklist"><span class="sr-only">etiqueta: </span>chk 10 web</span><span class="label-tag label-requisito"><span class="sr-only">etiqueta: </span>R 5.3</span></div>
+                <div class="issue-content"><blockquote>
+<p>As imagens-link têm um equivalente alternativo correto.<br>– <a href="https://amagovpt.github.io/kit-selo/checklists/checklist-10aspetos#n53">ver requisito 5.3 na lista 10 aspetos</a></p>
+</blockquote>
+<h3><strong>Evidências:</strong></h3>
+<p>Na página inicial e interiores, o logótipo tem o atributo title="A minha área" que advém do title do link. O leitor de ecrã NVDA lê essa informação, mas existem leitores de ecrã que podem não ler. </p>
+<img src="https://github.com/user-attachments/assets/2ffc0220-5393-4ee2-94e3-0a8caa490f3e" alt="Image" class="evidence-image" style="max-width: 100%; height: auto; margin: 10px 0; border: 1px solid #ddd; border-radius: 4px;">
+
+
+
+<p><em>Figura 1 - Logótipo com texto alternativo que deriva do title do link.</em> </p>
+<p>No rodapé das páginas da área privada, existem vários logótipos das entidades com o termo "logótipo" no seu <code>alt</code>, mas também acrescentam a informação "que redireciona para o site oficial". </p>
+<img src="https://github.com/user-attachments/assets/fde745c0-2d98-4820-9e76-9eaef0c8eaab" alt="Image" class="evidence-image" style="max-width: 100%; height: auto; margin: 10px 0; border: 1px solid #ddd; border-radius: 4px;">
+
+
+
+<p><em>Figura 2 - Logótipos do rodapé da área privada do BUPi</em></p>
+<h3><strong>Recomendações:</strong></h3>
+<ul>
+<li><p>A informação do title pode não ser interpretada corretamente por todas tecnologias de apoio, pelo que recomendamos optarem pela construção igual à área pública, como elemento <img class="evidence-image" style="max-width: 100%; height: auto; margin: 10px 0; border: 1px solid #ddd; border-radius: 4px;"> (que contém o svg) e atribuir o <code>alt="A minha área do BUPi - Balcão Único do Prédito"</code>. Desta forma, reflete o conteúdo da imagem, mas distingue também da área pública.</p>
+</li>
+<li><p>Deve evitar-se a utilização do termo “logótipo” no texto alternativo, uma vez que essa informação não acrescenta valor para utilizadores de tecnologias de apoio. O texto alternativo deve descrever de forma concisa e significativa o conteúdo e a função da imagem. Por exemplo, em vez de “logótipo da empresa”, deve optar-se por “Nome da empresa” ou, caso relevante, incluir o propósito do elemento: </p>
+<ul>
+<li><code>“alt="Página inicial da minha área do BUPi - Balcão Único do Prédio”</code>  no logótipo das páginas interiores, uma vez que é um link para a página inicial`.</li>
+<li>alt="INR", alt="Autoridade Tributária", etc., são suficientes, pois a função de link da imagem já está implícita, ou seja, entende-se que a imagem encaminha para a página correspondente (por exemplo, a da Autoridade Tributária).</li>
+</ul>
+</li>
+</ul>
+</div>
+              </li>
+              <li class="evidence-item">
+                <p><span class="visually-hidden">evidência: </span><a href="https://github.com/a11y-PT/report_053/issues/15" class="issue-link" target="_blank" rel="noopener noreferrer">issue #15</a> <strong>Área pública - Imagens-links sem texto alternativo ou com texto alternativo redundante, pouco claro ou em inglês</strong></p>
+                <div class="evidence-labels"><span class="label-tag label-nok"><span class="sr-only">etiqueta: </span>NOK</span><span class="label-tag label-checklist"><span class="sr-only">etiqueta: </span>chk 10 web</span><span class="label-tag label-requisito"><span class="sr-only">etiqueta: </span>R 5.3</span></div>
+                <div class="issue-content"><blockquote>
+<p>As imagens-link têm um equivalente alternativo correto.<br>– <a href="https://amagovpt.github.io/kit-selo/checklists/checklist-10aspetos#n53">ver requisito 5.3 na lista 10 aspetos</a></p>
+</blockquote>
+<h3><strong>Evidências:</strong></h3>
+<p>Nas páginas interiores do site, como, por exemplo, <a href="https://bupi.gov.pt/pt/municipios-aderentes">Municípios Aderentes</a>, o logótipo tem o texto alternativo "Logótipo BUPi", não descrevendo totalmente a função da imagem. </p>
+<img src="https://github.com/user-attachments/assets/50d681fd-fad7-4570-b6a9-e71fe1e6b721" alt="Image" class="evidence-image" style="max-width: 100%; height: auto; margin: 10px 0; border: 1px solid #ddd; border-radius: 4px;">
+
+
+
+<p><em>Figura 1 -  Logótipo das páginas interiores do site</em> </p>
+<p>No rodapé das páginas, existem vários logótipos das entidades com o termo "logótipo" no seu <code>alt</code>.</p>
+<img src="https://github.com/user-attachments/assets/600c7aa1-604c-478f-a99c-be9ab75b1ef3" alt="Image" class="evidence-image" style="max-width: 100%; height: auto; margin: 10px 0; border: 1px solid #ddd; border-radius: 4px;">
+
+
+
+<p><em>Figura 2 - Logótipos das entidades parceiras no rodapé</em> </p>
+<p>Na secção "Porque devo identificar e registar o meu terreno?" da <a href="https://bupi.gov.pt/pt">página inicial</a>, os botões da galeria estão em inglês, não sendo compreensível quando se navega com o leitor de ecrã na versão portuguesa do site. </p>
+<img src="https://github.com/user-attachments/assets/e3b186be-7eae-47c0-962d-a88ddf0bb892" alt="Image" class="evidence-image" style="max-width: 100%; height: auto; margin: 10px 0; border: 1px solid #ddd; border-radius: 4px;">
+
+
+
+<p><em>Figura 3 - Leitor de ecrã lê os botões da seta como "Move Left" e "Move Right"</em></p>
+<p>Os botões das setas do calendário da página <a href="https://bupi.gov.pt/pt/noticias-e-artigos?page=1">Notícias e Artigos </a> são apenas lido como "Botão, Botão, Botão", não distinguindo a função de cada um deles porque o atributo <code>aria-label</code> encontra-se vazio.</p>
+<img src="https://github.com/user-attachments/assets/47a7cd4b-77b0-4368-88a4-b519e72ddd76" alt="Image" class="evidence-image" style="max-width: 100%; height: auto; margin: 10px 0; border: 1px solid #ddd; border-radius: 4px;">
+
+
+
+<p><em>Figura 4 - Leitor de ecrã lê os botões das setas apenas como "Botão"</em></p>
+<p>Na <a href="https://bupi.gov.pt/mapaPublicoBUPi.html">página do mapa</a>, existem botões que são apenas imagem, mas o seu <code>alt </code>está vazio, como se fosse uma imagem decorativo. No entanto, é uma imagem funcional, cujo <code>alt</code> deve descrever a função do botão, que neste caso é ir para a página inicial do site do BUPi.  </p>
+<img src="https://github.com/user-attachments/assets/b3ae5a9d-e771-49f8-8dc0-0714f818acc1" alt="Image" class="evidence-image" style="max-width: 100%; height: auto; margin: 10px 0; border: 1px solid #ddd; border-radius: 4px;">
+
+
+
+<p><em>Figura 5 - Botão com imagem sem texto alternativo</em></p>
+<h3><strong>Recomendações:</strong></h3>
+<ul>
+<li><p>Deve evitar-se a utilização do termo “logótipo” no texto alternativo, uma vez que essa informação não acrescenta valor para utilizadores de tecnologias de apoio. O texto alternativo deve descrever de forma concisa e significativa o conteúdo e a função da imagem. Por exemplo, em vez de “logótipo da empresa”, deve optar-se por “Nome da empresa” ou, caso relevante, incluir o propósito do elemento: </p>
+<ul>
+<li><code>“alt="Página inicial do BUPi - Balcão Único do Prédio” </code> no logótipo das páginas interiores, uma vez que é um link para a página inicial`). Na página inicial ficaria apenas "BUPI - Balcão Único do Prédio". A mesma lógica deve ser aplicada ao<a href="https://bupi.gov.pt/GeoPortalBUPi.html"> GeoPortal do BUPi,</a> cujo logótipo deve ter o texto alternativo "GeoPortal do BUPi" na página inicial. </li>
+<li><code>“alt="INR Institutos dos Registos e do Notoriado” </code>, <code>“alt="Autoridade Tributária” </code>, etc.</li>
+</ul>
+</li>
+<li><p>O texto alternativo das imagens-links deve estar em português quando o utilizador está na versão portuguesa do site. Por isso, o texto alternativo de botões como "Move Left" devem ser alterados para português, por exemplo, <code>alt="Ir para a esquerda"</code> e <code>alt="Ir para a direita"</code>. </p>
+</li>
+<li><p>Adicionar texto alternativo a botões, como os do calendário, para se perceber a função dos mesmos. Por exemplo, <code>aria-label="Avançar mês"</code>, <code>aria-label="Avançar ano"</code>, <code>aria-label="Retroceder mês"</code>, <code>aria-label="Retroceder ano"</code>. </p>
+</li>
+<li><p>Adicionar texto alternativo ao botão do mapa, como, por exemplo, <code>alt="Página inicial do BUPI - Balcão Único do Prédio". </code></p>
+</li>
+</ul>
+</div>
+              </li></ul>
+</div>
+<h4 class="requirement-title" id="req-chk10-r-6.1">Requisito 6.1 - No corpo de um documento, o rácio de contraste entre a cor do texto normal (menor que 18 pontos ou menor que 14 pontos negrito) e a cor do fundo é superior a 4,5:1</h4>
+<div class="requirement-content">
+<p><span class="status-nok"><span class="sr-only">etiqueta: </span>NOK</span></p>
+<p>Lista de evidências recolhidas:</p>
+<ul class="evidence-list">
+
+              <li class="evidence-item">
+                <p><span class="visually-hidden">evidência: </span><a href="https://github.com/a11y-PT/report_053/issues/16" class="issue-link" target="_blank" rel="noopener noreferrer">issue #16</a> <strong>O rácio de contraste entre a cor do texto normal e a cor de fundo é inferior a 4,5:1</strong></p>
+                <div class="evidence-labels"><span class="label-tag label-nok"><span class="sr-only">etiqueta: </span>NOK</span><span class="label-tag label-checklist"><span class="sr-only">etiqueta: </span>chk 10 web</span><span class="label-tag label-requisito"><span class="sr-only">etiqueta: </span>R 6.1</span></div>
+                <div class="issue-content"><blockquote>
+<p>No corpo de um documento, o rácio de contraste entre a cor do texto normal (menor que 18 pontos ou menor que 14 pontos negrito) e a cor do fundo é superior a 4,5:1.<br>– <a href="https://amagovpt.github.io/kit-selo/checklists/checklist-10aspetos#n61">ver requisito 6.1 na lista 10 aspetos</a></p>
+</blockquote>
+<h3><strong>Evidências:</strong></h3>
+<p>Na <a href="https://bupi.gov.pt/mapaPublicoBUPi.html">página do Mapa Público</a>, o título da página tem um rácio de contraste inferior a 4,5:1. </p>
+<img src="https://github.com/user-attachments/assets/071a36ea-20a8-424b-aece-46d8284761dd" alt="Image" class="evidence-image" style="max-width: 100%; height: auto; margin: 10px 0; border: 1px solid #ddd; border-radius: 4px;">
+
+
+
+<p> <em>Figura 1 - Título da página branca sob fundo branco</em></p>
+<img src="https://github.com/user-attachments/assets/bca34021-be80-4fd3-898e-c32b6d43048d" alt="Image" class="evidence-image" style="max-width: 100%; height: auto; margin: 10px 0; border: 1px solid #ddd; border-radius: 4px;">
+
+
+
+<p><em>Figura 2 - Rácio de contraste de 4,37:1</em> </p>
+<h3><strong>Recomendações:</strong></h3>
+<p>O contraste no texto normal (menor que 18 pontos ou menor que 14 pontos negrito) das páginas deve ser, no mínimo 4,5:1, para que pessoas com baixa visão consigam ler o texto.</p>
+</div>
+              </li></ul>
+</div>
+<h4 class="requirement-title" id="req-chk10-r-8.3">Requisito 8.3 - Quando se retira a CSS, deve ser possível reconhecer a semântica dos diversos elementos</h4>
+<div class="requirement-content">
+<p><span class="status-nok"><span class="sr-only">etiqueta: </span>NOK</span></p>
+<p>Lista de evidências recolhidas:</p>
+<ul class="evidence-list">
+
+              <li class="evidence-item">
+                <p><span class="visually-hidden">evidência: </span><a href="https://github.com/a11y-PT/report_053/issues/73" class="issue-link" target="_blank" rel="noopener noreferrer">issue #73</a> <strong>Área privada - Não é possível reconhecer a semântica do botão do perfil</strong></p>
+                <div class="evidence-labels"><span class="label-tag label-nok"><span class="sr-only">etiqueta: </span>NOK</span><span class="label-tag label-checklist"><span class="sr-only">etiqueta: </span>chk 10 web</span><span class="label-tag label-requisito"><span class="sr-only">etiqueta: </span>R 8.3</span></div>
+                <div class="issue-content"><blockquote>
+<p>Quando se retira o CSS, deve ser possível reconhecer a semântica dos diversos elementos.<br>– <a href="https://amagovpt.github.io/kit-selo/checklists/checklist-10aspetos#n83">ver requisito 8.3 na lista 10 aspetos</a></p>
+</blockquote>
+<h3><strong>Evidências:</strong></h3>
+<p>Quando os estilos da página inicial da área privada são removidos, o botão dp perfil e outros elementos interativos (botões de acesso aos formulários) deixam de responder, tornando impossível clicar, interagir ou aceder às informações disponíveis.</p>
+<img src="https://github.com/user-attachments/assets/148349bf-5d96-460f-ae06-21c0ead4b691" alt="Image" class="evidence-image" style="max-width: 100%; height: auto; margin: 10px 0; border: 1px solid #ddd; border-radius: 4px;">
+
+
+
+<p><em>Figura 1 - Página inicial da área privada sem estilos CSS</em></p>
+<img src="https://github.com/user-attachments/assets/9c449648-abe2-4f51-88af-7b423279af97" alt="Image" class="evidence-image" style="max-width: 100%; height: auto; margin: 10px 0; border: 1px solid #ddd; border-radius: 4px;">
+
+
+
+<p><em>Figura 2 - Página inicial da área privada com estilos CSS</em></p>
+<h3><strong>Recomendações:</strong></h3>
+<p>Devem estruturar os botões e cards como elementos <code>&lt;button&gt;</code> em HTML, garantindo que mantêm a semântica adequada e continuam funcionais mesmo na ausência de estilos. No caso do botão do menu que possuo subopções, podem consultar a referência <a href="https://www.w3.org/WAI/ARIA/apg/patterns/menu-button/">Menu Button da W3C</a>. </p>
+</div>
+              </li>
+              <li class="evidence-item">
+                <p><span class="visually-hidden">evidência: </span><a href="https://github.com/a11y-PT/report_053/issues/22" class="issue-link" target="_blank" rel="noopener noreferrer">issue #22</a> <strong>Área pública - Não é possível reconhecer a semântica das tabs</strong></p>
+                <div class="evidence-labels"><span class="label-tag label-nok"><span class="sr-only">etiqueta: </span>NOK</span><span class="label-tag label-checklist"><span class="sr-only">etiqueta: </span>chk 10 web</span><span class="label-tag label-requisito"><span class="sr-only">etiqueta: </span>R 8.3</span></div>
+                <div class="issue-content"><blockquote>
+<p>Quando se retira o CSS, deve ser possível reconhecer a semântica dos diversos elementos.<br>– <a href="https://amagovpt.github.io/kit-selo/checklists/checklist-10aspetos#n83">ver requisito 8.3 na lista 10 aspetos</a></p>
+</blockquote>
+<h3><strong>Evidências:</strong></h3>
+<p>Na página <a href="https://bupi.gov.pt/pt/documentacao">Documentação</a>, existem quatro separadores (tabs) que podem ser selecionados com o rato. No entanto, estes elementos estão implementados com <code>&lt;div&gt;</code>, o que lhes retira o significado semântico de componentes interativos. Como consequência, não é possível navegar entre os separadores utilizando o teclado nem aceder ao seu conteúdo através de leitores de ecrã.</p>
+<img src="https://github.com/user-attachments/assets/9f2dea8c-b2da-4968-aae1-e08c97153ecc" alt="Image" class="evidence-image" style="max-width: 100%; height: auto; margin: 10px 0; border: 1px solid #ddd; border-radius: 4px;">
+
+
+
+<p><em>Figura 1 - Tabs da página Documentação sem estilos CSS</em></p>
+<img src="https://github.com/user-attachments/assets/26eda047-7d4a-40fd-a4f5-b15d2f3e8fbc" alt="Image" class="evidence-image" style="max-width: 100%; height: auto; margin: 10px 0; border: 1px solid #ddd; border-radius: 4px;">
+
+
+
+<p><em>Figura 2 - Tabs da página Documentação com estilos CSS</em></p>
+<h3><strong>Recomendações:</strong></h3>
+<p>Devem rever todas as tabs com essa construção e estruturá-las como <code>&lt;div&gt;</code> que contém o atributo <code>aria role="tablist"</code>, que por sua vez contém botões com atributo <code>role="tab"</code>. Como referência, podem consultar a página <a href="https://www.w3.org/WAI/ARIA/apg/patterns/tabs/examples/tabs-automatic/">Example of Tabs da W3C</a>. </p>
+</div>
+              </li></ul>
+</div>
+<h4 class="requirement-title" id="req-chk10-r-9.1">Requisito 9.1 - Quando a caixa de diálogo é aberta, o foco (cursor do Browser) move-se para um elemento dentro da caixa de diálogo</h4>
+<div class="requirement-content">
+<p><span class="status-nok"><span class="sr-only">etiqueta: </span>NOK</span></p>
+<p>Lista de evidências recolhidas:</p>
+<ul class="evidence-list">
+
+              <li class="evidence-item">
+                <p><span class="visually-hidden">evidência: </span><a href="https://github.com/a11y-PT/report_053/issues/72" class="issue-link" target="_blank" rel="noopener noreferrer">issue #72</a> <strong>A modal dos cookies não é considerada como exemplo de caixa de diálogo</strong></p>
+                <div class="evidence-labels"><span class="label-tag label-nok"><span class="sr-only">etiqueta: </span>NOK</span><span class="label-tag label-checklist"><span class="sr-only">etiqueta: </span>chk 10 web</span><span class="label-tag label-requisito"><span class="sr-only">etiqueta: </span>R 9.1</span></div>
+                <div class="issue-content"><blockquote>
+<p>Quando a caixa de diálogo é aberta, o foco (cursor do Browser) move-se para um elemento dentro da caixa de diálogo<br>– <a href="https://amagovpt.github.io/kit-selo/checklists/checklist-10aspetos#n91">ver requisito 9.1 na lista 10 aspetos</a></p>
+</blockquote>
+<h3><strong>Evidências:</strong></h3>
+<p>Um exemplo de modal implementada para ser avaliada neste contexto é a caixa de cookies. </p>
+<p>No entanto, no HTML da página, esta encontra-se posicionada após o rodapé, sendo apenas alcançada pelo leitor de ecrã depois da navegação por todo o conteúdo da página. Deve estar posicionada no topo do código HTML. </p>
+<h3><strong>Recomendações:</strong></h3>
+<p>No site da <a href="https://compete2030.gov.pt/">Compete2030</a>, é possível consultarem o exemplo da modal de cookies, que é o primeiro elemento a receber o foco, que fica restrito à modal até o utilizador selecionar uma das opções (ex: Sim, aceito). </p>
+<img src="https://github.com/user-attachments/assets/d81c8018-6c21-4567-8ba9-0bc61ed8b5a1" alt="Image" class="evidence-image" style="max-width: 100%; height: auto; margin: 10px 0; border: 1px solid #ddd; border-radius: 4px;">
+
+
+
+<p><em>Figura 1 - Caixa de cookies</em></p>
+<p>Além disso, devem corrigir a evidência destes 4 critérios relacionado com caixas de diálogo para que tenham o exemplo da modal, não a área da Pesquisa. </p>
+</div>
+              </li>
+              <li class="evidence-item">
+                <p><span class="visually-hidden">evidência: </span><a href="https://github.com/a11y-PT/report_053/issues/25" class="issue-link" target="_blank" rel="noopener noreferrer">issue #25</a> <strong>A interação da área da Pesquisa está incorretamente estruturada como uma modal</strong></p>
+                <div class="evidence-labels"><span class="label-tag label-nok"><span class="sr-only">etiqueta: </span>NOK</span><span class="label-tag label-checklist"><span class="sr-only">etiqueta: </span>chk 10 web</span><span class="label-tag label-requisito"><span class="sr-only">etiqueta: </span>R 9.1</span></div>
+                <div class="issue-content"><blockquote>
+<p>Quando a caixa de diálogo é aberta, o foco (cursor do Browser) move-se para um elemento dentro da caixa de diálogo<br>– <a href="https://amagovpt.github.io/kit-selo/checklists/checklist-10aspetos#n91">ver requisito 9.1 na lista 10 aspetos</a></p>
+</blockquote>
+<h3>Evidências:</h3>
+<p>Apresentaram como evidência de modal a área da caixa da pesquisa. </p>
+<p>No site do BUPi, a Pesquisa foi implementada como uma modal. Quando o utilizador navega com teclado e leitor de ecrã para dentro da modal, o foco fica corretamente restrito aos seus elementos, não sendo possível sair com a tecla Tab, apenas com Escape. Ao pressionar Escape, o foco regressa ao elemento que abriu a modal.</p>
+<img src="https://github.com/user-attachments/assets/341f8b07-7860-4d6e-abb1-2f8554e98f11" alt="Image" class="evidence-image" style="max-width: 100%; height: auto; margin: 10px 0; border: 1px solid #ddd; border-radius: 4px;">
+
+
+
+<p><em>Figura 1 - Modal da Pesquisa</em></p>
+<h3>Recomendações:</h3>
+<p>O botão de Pesquisa deve seguir as recomendações do <a href="https://react.agora.gov.pt/?path=/story/components-header--header-navigation-five-or-less-links-story">Design System do Ágora - Header Navigation Fiver or Less Links</a>.</p>
+<p>Ao navegar por teclado, ao passar do último link da pesquisa para o próximo item do menu principal, a área de pesquisa deve fechar automaticamente. O foco não deve ficar retido.</p>
+<p>A área da Pesquisa deve comportar-se como um item de navegação, e o botão deve ser acessível por teclado em todos os estados (colapsado e expandido). Atualmente, quando o botão muda para “× Pesquisar” (fechar), não é possível alcançá-lo via teclado, impedindo o utilizador de encerrar a pesquisa.</p>
+</div>
+              </li></ul>
+</div>
+<h4 class="requirement-title" id="req-chk10-r-9.2">Requisito 9.2 - Quando uma caixa de diálogo está aberta, a navegação com teclado (Browser ou Tecnologia de apoio) tem de ficar circunscrita aos elementos que compõem a caixa de diálogo</h4>
+<div class="requirement-content">
+<p><span class="status-nok"><span class="sr-only">etiqueta: </span>NOK</span></p>
+<p>Lista de evidências recolhidas:</p>
+<ul class="evidence-list">
+
+              <li class="evidence-item">
+                <p><span class="visually-hidden">evidência: </span><a href="https://github.com/a11y-PT/report_053/issues/26" class="issue-link" target="_blank" rel="noopener noreferrer">issue #26</a> <strong>A interação da área da Pesquisa está incorretamente estruturada como uma modal</strong></p>
+                <div class="evidence-labels"><span class="label-tag label-nok"><span class="sr-only">etiqueta: </span>NOK</span><span class="label-tag label-checklist"><span class="sr-only">etiqueta: </span>chk 10 web</span><span class="label-tag label-requisito"><span class="sr-only">etiqueta: </span>R 9.2</span></div>
+                <div class="issue-content"><blockquote>
+<p>Quando uma caixa de diálogo está aberta, a navegação com teclado (Browser ou Tecnologia de apoio) tem de ficar circunscrita aos elementos que compõem a caixa de diálogo<br>– <a href="https://amagovpt.github.io/kit-selo/checklists/checklist-10aspetos#n92">ver requisito 9.2 na lista 10 aspetos</a></p>
+</blockquote>
+<h3>Evidências:</h3>
+<p>Apresentaram como evidência de modal a área da caixa da pesquisa. </p>
+<p>No site do BUPi, a Pesquisa foi implementada como uma modal. Quando o utilizador navega com teclado e leitor de ecrã para dentro da modal, o foco fica corretamente restrito aos seus elementos, não sendo possível sair com a tecla Tab, apenas com Escape. Ao pressionar Escape, o foco regressa ao elemento que abriu a modal.</p>
+<img src="https://github.com/user-attachments/assets/341f8b07-7860-4d6e-abb1-2f8554e98f11" alt="Image" class="evidence-image" style="max-width: 100%; height: auto; margin: 10px 0; border: 1px solid #ddd; border-radius: 4px;">
+
+
+
+<p><em>Figura 1 - Modal da Pesquisa</em></p>
+<h3>Recomendações:</h3>
+<p>O botão de Pesquisa deve seguir as recomendações do <a href="https://react.agora.gov.pt/?path=/story/components-header--header-navigation-five-or-less-links-story">Design System do Ágora - Header Navigation Fiver or Less Links</a>.</p>
+<p>Ao navegar por teclado, ao passar do último link da pesquisa para o próximo item do menu principal, a área de pesquisa deve fechar automaticamente. O foco não deve ficar retido.</p>
+<p>A área da Pesquisa deve comportar-se como um item de navegação, e o botão deve ser acessível por teclado em todos os estados (colapsado e expandido). Atualmente, quando o botão muda para “× Pesquisar” (fechar), não é possível alcançá-lo via teclado, impedindo o utilizador de encerrar a pesquisa.</p>
+</div>
+              </li></ul>
+</div>
+<h4 class="requirement-title" id="req-chk10-r-9.3">Requisito 9.3 - A caixa de diálogo tem de ter um mecanismo que permita sair ou fechar a caixa, quer através de teclado quer através de um dispositivo apontador</h4>
+<div class="requirement-content">
+<p><span class="status-nok"><span class="sr-only">etiqueta: </span>NOK</span></p>
+<p>Lista de evidências recolhidas:</p>
+<ul class="evidence-list">
+
+              <li class="evidence-item">
+                <p><span class="visually-hidden">evidência: </span><a href="https://github.com/a11y-PT/report_053/issues/27" class="issue-link" target="_blank" rel="noopener noreferrer">issue #27</a> <strong>A interação da área da Pesquisa está incorretamente estruturada como uma modal</strong></p>
+                <div class="evidence-labels"><span class="label-tag label-nok"><span class="sr-only">etiqueta: </span>NOK</span><span class="label-tag label-checklist"><span class="sr-only">etiqueta: </span>chk 10 web</span><span class="label-tag label-requisito"><span class="sr-only">etiqueta: </span>R 9.3</span></div>
+                <div class="issue-content"><blockquote>
+<p>A caixa de diálogo tem de ter um mecanismo que permita sair ou fechar a caixa, quer através de teclado quer através de um dispositivo apontador<br>– <a href="https://amagovpt.github.io/kit-selo/checklists/checklist-10aspetos#n93">ver requisito 9.3 na lista 10 aspetos</a></p>
+</blockquote>
+<h3>Evidências:</h3>
+<p>Apresentaram como evidência de modal a área da caixa da pesquisa. </p>
+<p>No site do BUPi, a Pesquisa foi implementada como uma modal. Quando o utilizador navega com teclado e leitor de ecrã para dentro da modal, o foco fica corretamente restrito aos seus elementos, não sendo possível sair com a tecla Tab, apenas com Escape. Ao pressionar Escape, o foco regressa ao elemento que abriu a modal.</p>
+<img src="https://github.com/user-attachments/assets/341f8b07-7860-4d6e-abb1-2f8554e98f11" alt="Image" class="evidence-image" style="max-width: 100%; height: auto; margin: 10px 0; border: 1px solid #ddd; border-radius: 4px;">
+
+
+
+<p><em>Figura 1 - Modal da Pesquisa</em></p>
+<h3>Recomendações:</h3>
+<p>O botão de Pesquisa deve seguir as recomendações do <a href="https://react.agora.gov.pt/?path=/story/components-header--header-navigation-five-or-less-links-story">Design System do Ágora - Header Navigation Fiver or Less Links</a>.</p>
+<p>Ao navegar por teclado, ao passar do último link da pesquisa para o próximo item do menu principal, a área de pesquisa deve fechar automaticamente. O foco não deve ficar retido.</p>
+<p>A área da Pesquisa deve comportar-se como um item de navegação, e o botão deve ser acessível por teclado em todos os estados (colapsado e expandido). Atualmente, quando o botão muda para “× Pesquisar” (fechar), não é possível alcançá-lo via teclado, impedindo o utilizador de encerrar a pesquisa.</p>
+</div>
+              </li></ul>
+</div>
+<h4 class="requirement-title" id="req-chk10-r-9.4">Requisito 9.4 - Quando a caixa de diálogo fecha, o foco (cursor do Browser) deve voltar ao elemento interativo que a invocou</h4>
+<div class="requirement-content">
+<p><span class="status-nok"><span class="sr-only">etiqueta: </span>NOK</span></p>
+<p>Lista de evidências recolhidas:</p>
+<ul class="evidence-list">
+
+              <li class="evidence-item">
+                <p><span class="visually-hidden">evidência: </span><a href="https://github.com/a11y-PT/report_053/issues/28" class="issue-link" target="_blank" rel="noopener noreferrer">issue #28</a> <strong>A interação da área da Pesquisa está incorretamente estruturada como uma modal</strong></p>
+                <div class="evidence-labels"><span class="label-tag label-nok"><span class="sr-only">etiqueta: </span>NOK</span><span class="label-tag label-checklist"><span class="sr-only">etiqueta: </span>chk 10 web</span><span class="label-tag label-requisito"><span class="sr-only">etiqueta: </span>R 9.4</span></div>
+                <div class="issue-content"><blockquote>
+<p>Quando a caixa de diálogo fecha, o foco (cursor do Browser) deve voltar ao elemento interativo que a invocou<br>– <a href="https://amagovpt.github.io/kit-selo/checklists/checklist-10aspetos#n94">ver requisito 9.4 na lista 10 aspetos</a></p>
+</blockquote>
+<h3>Evidências:</h3>
+<p>Apresentaram como evidência de modal a área da caixa da pesquisa. </p>
+<p>No site do BUPi, a Pesquisa foi implementada como uma modal. Quando o utilizador navega com teclado e leitor de ecrã para dentro da modal, o foco fica corretamente restrito aos seus elementos, não sendo possível sair com a tecla Tab, apenas com Escape. Ao pressionar Escape, o foco regressa ao elemento que abriu a modal.</p>
+<img src="https://github.com/user-attachments/assets/341f8b07-7860-4d6e-abb1-2f8554e98f11" alt="Image" class="evidence-image" style="max-width: 100%; height: auto; margin: 10px 0; border: 1px solid #ddd; border-radius: 4px;">
+
+
+
+<p><em>Figura 1 - Modal da Pesquisa</em></p>
+<h3>Recomendações:</h3>
+<p>O botão de Pesquisa deve seguir as recomendações do <a href="https://react.agora.gov.pt/?path=/story/components-header--header-navigation-five-or-less-links-story">Design System do Ágora - Header Navigation Fiver or Less Links</a>.</p>
+<p>Ao navegar por teclado, ao passar do último link da pesquisa para o próximo item do menu principal, a área de pesquisa deve fechar automaticamente. O foco não deve ficar retido.</p>
+<p>A área da Pesquisa deve comportar-se como um item de navegação, e o botão deve ser acessível por teclado em todos os estados (colapsado e expandido). Atualmente, quando o botão muda para “× Pesquisar” (fechar), não é possível alcançá-lo via teclado, impedindo o utilizador de encerrar a pesquisa.</p>
+<p>Um exemplo de modal correto a considerar neste critério é a caixa de cookies. </p>
+<img src="https://github.com/user-attachments/assets/d81c8018-6c21-4567-8ba9-0bc61ed8b5a1" alt="Image" class="evidence-image" style="max-width: 100%; height: auto; margin: 10px 0; border: 1px solid #ddd; border-radius: 4px;">
+
+
+
+<p><em>Figura 2 - Caixa de cookies</em></p>
+</div>
+              </li></ul>
+</div>
+
+      </div>
+      <div class="checklist-section">
+        <h3 id="checklist-conteudo">Checklist Conteúdo</h3>
+        <p><span class="status-nok"><span class="sr-only">etiqueta: </span>NOK</span></p>
+        
+      <p><strong>Nível de conformidade:</strong></p>
+        <ul>
+          <li><strong>Checklist Conteúdo</strong>: 76.5% (13/17)
+            <ul>
+              <li>Requisitos avaliados: 17 (17 aplicáveis)</li>
+              <li>Requisitos OK: 13</li>
+              <li>Requisitos NOK: 4</li>
+              
+            </ul>
+          </li>
+        </ul>
+    
+        <h4 class="requirement-title" id="req-conteudo-r-1.1">Requisito 1.1 - O sítio Web apresenta um resumo breve do seu propósito, visível sem se fazer scroll</h4>
+<div class="requirement-content">
+<p><span class="status-nok"><span class="sr-only">etiqueta: </span>NOK</span></p>
+<p>Lista de evidências recolhidas:</p>
+<ul class="evidence-list">
+
+              <li class="evidence-item">
+                <p><span class="visually-hidden">evidência: </span><a href="https://github.com/a11y-PT/report_053/issues/30" class="issue-link" target="_blank" rel="noopener noreferrer">issue #30</a> <strong>Existe uma descrição do propósito do site, mas não está imediatamente visível quando se entra na página inicial</strong></p>
+                <div class="evidence-labels"><span class="label-tag label-nok"><span class="sr-only">etiqueta: </span>NOK</span><span class="label-tag label-requisito"><span class="sr-only">etiqueta: </span>R 1.1</span><span class="label-tag label-checklist"><span class="sr-only">etiqueta: </span>chk conteúdo</span></div>
+                <div class="issue-content"><blockquote>
+<p>O sítio Web apresenta um resumo breve do seu propósito, visível sem fazer scroll.<br>– <a href="https://amagovpt.github.io/kit-selo/checklists/checklist-conteudo#n11">ver requisito 1.1 na lista Conteúdo</a></p>
+</blockquote>
+<p><strong>Evidências:</strong><br>Verificou-se que existe uma descrição do propósito do site, mas não está imediatamente visível quando se entra na página inicial, sendo necessário fazer scroll down. A informação "Proteger o seu terreno é simples..." não é suficiente para descrever o propósito do site.</p>
+<img src="https://github.com/user-attachments/assets/22be5c35-c27f-4611-ad64-d7b6ce0a2a71" alt="Image" class="evidence-image" style="max-width: 100%; height: auto; margin: 10px 0; border: 1px solid #ddd; border-radius: 4px;">
+
+
+
+<p><em>Figura 1 - Página inicial, com conteúdo "above the fold" mas que não apresenta o propósito do site.</em> </p>
+<p> <strong>Recomendações:</strong><br>Na Homepage deve existir uma breve descrição do propósito do website que demonstre que tarefas é possível realizar no mesmo. Esse propósito deve ser imediatamente visível na página, sem ser necessário fazer scroll, avançar no carrossel, entre outros, como se verifica no exemplo do <a href="https://www.acessibilidade.gov.pt/">site acessibilidade.gov</a>.</p>
+</div>
+              </li></ul>
+</div>
+<h4 class="requirement-title" id="req-conteudo-r-1.3">Requisito 1.3 - Cada bloco de conteúdo contém a sua data de atualização</h4>
+<div class="requirement-content">
+<p><span class="status-nok"><span class="sr-only">etiqueta: </span>NOK</span></p>
+<p>Lista de evidências recolhidas:</p>
+<ul class="evidence-list">
+
+              <li class="evidence-item">
+                <p><span class="visually-hidden">evidência: </span><a href="https://github.com/a11y-PT/report_053/issues/32" class="issue-link" target="_blank" rel="noopener noreferrer">issue #32</a> <strong>Há blocos de conteúdo sem data de atualização</strong></p>
+                <div class="evidence-labels"><span class="label-tag label-nok"><span class="sr-only">etiqueta: </span>NOK</span><span class="label-tag label-requisito"><span class="sr-only">etiqueta: </span>R 1.3</span><span class="label-tag label-checklist"><span class="sr-only">etiqueta: </span>chk conteúdo</span></div>
+                <div class="issue-content"><blockquote>
+<p>Cada bloco de conteúdo contém a sua data de atualização.<br>– <a href="https://amagovpt.github.io/kit-selo/checklists/checklist-conteudo#n13">ver requisito 1.3 na lista Conteúdo</a></p>
+</blockquote>
+<h3><strong>Evidências:</strong></h3>
+<p>Na <a href="https://bupi.gov.pt/pt/noticia/mitigacao-incendios">página individual de cada Notícia</a>, não é apresentada a data de atualização, apenas a data de publicação. </p>
+<img src="https://github.com/user-attachments/assets/c64ce652-71d5-4ab7-bc8c-b386788a988d" alt="Image" class="evidence-image" style="max-width: 100%; height: auto; margin: 10px 0; border: 1px solid #ddd; border-radius: 4px;">
+
+
+
+<p><em>Figura 1 - Notícia na página inicial</em></p>
+<p>Existem mais conteúdos sem data de atualização, estando apenas presente em alguns blocos informativos com percentagem. </p>
+<h3><strong>Recomendações:</strong></h3>
+<p>Aplicar o mesmo texto de data de atualização que existe na secção "O que já alcançámos" na página inicial. </p>
+<img src="https://github.com/user-attachments/assets/c580e431-6b33-42ef-a081-f558d4dfd2ec" alt="Image" class="evidence-image" style="max-width: 100%; height: auto; margin: 10px 0; border: 1px solid #ddd; border-radius: 4px;">
+
+
+
+<p><em>Figura 2 - Indicadores da página inicial com data de atualização</em></p>
+</div>
+              </li></ul>
+</div>
+<h4 class="requirement-title" id="req-conteudo-r-2.1">Requisito 2.1 - O tipo de letra do corpo do documento é adequado e o tamanho da letra é, no mínimo, de 12 pontos</h4>
+<div class="requirement-content">
+<p><span class="status-ok"><span class="sr-only">etiqueta: </span>OK</span> (no entanto contém 1 melhoria que se recomenda efetuar)</p>
+<p>Lista de evidências recolhidas:</p>
+<ul class="evidence-list">
+
+              <li class="evidence-item">
+                <p><span class="visually-hidden">evidência: </span><a href="https://github.com/a11y-PT/report_053/issues/34" class="issue-link" target="_blank" rel="noopener noreferrer">issue #34</a> <strong>Evidência errada na checklist</strong></p>
+                <div class="evidence-labels"><span class="label-tag label-melhoria"><span class="sr-only">etiqueta: </span>melhoria</span><span class="label-tag label-checklist"><span class="sr-only">etiqueta: </span>chk conteúdo</span><span class="label-tag label-requisito"><span class="sr-only">etiqueta: </span>R 2.1</span></div>
+                <div class="issue-content"><blockquote>
+<p>O tipo de letra do corpo do documento é adequado e o tamanho da letra é, no mínimo, de 12 pontos.<br>– <a href="https://amagovpt.github.io/kit-selo/checklists/checklist-conteudo#n21">ver requisito 2.1 na lista Conteúdo</a></p>
+</blockquote>
+<h3><strong>Evidências:</strong></h3>
+<p>Nas evidências da checklist, referiram que o tamanho mais pequeno de letra de corpo utilizado no site é de 14px e apresentaram uma imagem de informação secundária com 14 px, correspondente ao critério 2.2 da lista de conteúdo. </p>
+<img src="https://github.com/user-attachments/assets/8a39f0ca-6c10-4e0a-b60c-fa63c12a8b8a" alt="Image" class="evidence-image" style="max-width: 100%; height: auto; margin: 10px 0; border: 1px solid #ddd; border-radius: 4px;">
+
+
+
+<p><em>Figura 1 - Evidência errada</em> </p>
+<h3><strong>Recomendações:</strong></h3>
+<p>Devem apresentar evidência do conteúdo principal, ou seja, do texto da notícia, ou das secções da página inicial, que no mínimo têm 16px, correspondente a 12 pontos. </p>
+</div>
+              </li></ul>
+</div>
+<h4 class="requirement-title" id="req-conteudo-r-2.3">Requisito 2.3 - Blocos e linhas de texto com largura não superior a 100 caracteres</h4>
+<div class="requirement-content">
+<p><span class="status-nok"><span class="sr-only">etiqueta: </span>NOK</span></p>
+<p>Lista de evidências recolhidas:</p>
+<ul class="evidence-list">
+
+              <li class="evidence-item">
+                <p><span class="visually-hidden">evidência: </span><a href="https://github.com/a11y-PT/report_053/issues/36" class="issue-link" target="_blank" rel="noopener noreferrer">issue #36</a> <strong>Blocos e linhas de texto com largura superior a 100 caracteres</strong></p>
+                <div class="evidence-labels"><span class="label-tag label-nok"><span class="sr-only">etiqueta: </span>NOK</span><span class="label-tag label-checklist"><span class="sr-only">etiqueta: </span>chk conteúdo</span><span class="label-tag label-requisito"><span class="sr-only">etiqueta: </span>R 2.3</span></div>
+                <div class="issue-content"><blockquote>
+<p>Blocos e linhas de texto com largura não superior a 100 caracteres.<br>– <a href="https://amagovpt.github.io/kit-selo/checklists/checklist-conteudo#n23">ver requisito 2.3 na lista Conteúdo</a></p>
+</blockquote>
+<h3><strong>Evidências:</strong></h3>
+<p>Os blocos e linhas de texto nem sempre têm sempre largura inferior a 100 caracteres, como se pode ver na página <a href="https://bupi.gov.pt/pt/noticia/emigrante-chama">Emigrante Chama</a></p>
+<img src="https://github.com/user-attachments/assets/4489da98-12ba-4b79-9ed5-b7520d4a1ad2" alt="Image" class="evidence-image" style="max-width: 100%; height: auto; margin: 10px 0; border: 1px solid #ddd; border-radius: 4px;">
+
+
+
+<p><em>Figura 1 - Linhas de texto da página Emigrante Chama com 140 caracteres</em></p>
+<h3><strong>Recomendações:</strong></h3>
+<p>Para assegurar uma boa leitura, as linhas de texto devem ter até 80 caracteres (incluindo espaços). No limite, podem ir até aos 100 caracteres (incluindo espaços).</p>
+<p>Recomenda-se que seja definida uma largura máxima para as caixas de texto (<em>max-width</em>, em CSS), com unidades relativas ao tamanho de fonte (unidades <em>em</em> ou <em>rem</em>) para garantir que não é ultrapassado o número máximo de caracteres por linha.</p>
+</div>
+              </li></ul>
+</div>
+<h4 class="requirement-title" id="req-conteudo-r-5.2">Requisito 5.2 - Os elementos interativos têm uma dimensão mínima de 44px CSS (44 pontos) (vertical e horizontal)</h4>
+<div class="requirement-content">
+<p><span class="status-nok"><span class="sr-only">etiqueta: </span>NOK</span></p>
+<p>Lista de evidências recolhidas:</p>
+<ul class="evidence-list">
+
+              <li class="evidence-item">
+                <p><span class="visually-hidden">evidência: </span><a href="https://github.com/a11y-PT/report_053/issues/44" class="issue-link" target="_blank" rel="noopener noreferrer">issue #44</a> <strong>Existem elementos interativos com dimensão mínima abaixo de 44px CSS vertical e horizontal.</strong></p>
+                <div class="evidence-labels"><span class="label-tag label-nok"><span class="sr-only">etiqueta: </span>NOK</span><span class="label-tag label-checklist"><span class="sr-only">etiqueta: </span>chk conteúdo</span><span class="label-tag label-requisito"><span class="sr-only">etiqueta: </span>R 5.2</span></div>
+                <div class="issue-content"><blockquote>
+<p>Os elementos interativos têm uma dimensão mínima de 44px CSS (44 pontos), vertical e horizontal.<br>– <a href="https://amagovpt.github.io/kit-selo/checklists/checklist-conteudo#n52">ver requisito 5.2 na lista Conteúdo</a></p>
+</blockquote>
+<h3><strong>Evidências:</strong></h3>
+<p>No <a href="https://bupi.gov.pt/pt">rodapé da área pública</a> existem botões das redes sociais com dimensões 24x25, e o mesmo acontece na área privada. </p>
+<img src="https://github.com/user-attachments/assets/c5155b4a-bacb-4497-a20e-19a449e8d2ea" alt="Image" class="evidence-image" style="max-width: 100%; height: auto; margin: 10px 0; border: 1px solid #ddd; border-radius: 4px;">
+
+
+
+<p><em>Figura 1 - Botões das redes sociais do rodapé da área pública</em></p>
+<p>Na secção <a href="https://bupi.gov.pt/pt#:~:text=Como%20posso%20identificar%20e%20registar%20o%20meu%20terreno%3F">"Como posso identificar e registar o meu terreno"</a>, os botões tem altura inferior a 44px. </p>
+<img src="https://github.com/user-attachments/assets/12962752-1c22-417e-aa38-2694a37940a5" alt="Image" class="evidence-image" style="max-width: 100%; height: auto; margin: 10px 0; border: 1px solid #ddd; border-radius: 4px;">
+
+
+
+<p><em>Figura  2 - Cards com botões</em></p>
+<h3><strong>Recomendações:</strong></h3>
+<p>Devem garantir que os elementos interativos têm uma altura e largura igual ou superior a 44px de área clicável, mesmo que o ícone/imagem tenha um tamanho inferior.</p>
+<p>Alguns exemplos de elementos interativos corretos na <a href="https://bupi.gov.pt/pt">página inicial da área pública</a> são os seguintes: </p>
+<img src="https://github.com/user-attachments/assets/933a182c-75c6-4507-874d-ec069528c14f" alt="Image" class="evidence-image" style="max-width: 100%; height: auto; margin: 10px 0; border: 1px solid #ddd; border-radius: 4px;">
+
+
+
+<p><em>Figura 3 - Botão da secção Algoritmo do futuro</em></p>
+<img src="https://github.com/user-attachments/assets/896d1c86-31d3-48f7-9a88-ee20c91d9320" alt="Image" class="evidence-image" style="max-width: 100%; height: auto; margin: 10px 0; border: 1px solid #ddd; border-radius: 4px;">
+
+
+
+<p><em>Figura 4 - Card principal da secção Notícias da página inicial com altura e largura a partir de 44px.</em> </p>
+<img src="https://github.com/user-attachments/assets/6190e51b-e34a-40a5-86fc-1ca42dab1abb" alt="Image" class="evidence-image" style="max-width: 100%; height: auto; margin: 10px 0; border: 1px solid #ddd; border-radius: 4px;">
+
+
+
+<p><em>Figura 5 - Card  das notícias com altura e largura a partir de 44px</em> </p>
+<p>Devem corrigir também a evidência que colocaram na checklist. </p>
+</div>
+              </li></ul>
+</div>
+
+      </div>
+      <div class="checklist-section">
+        <h3 id="checklist-transacao">Checklist Transação</h3>
+        <p><span class="status-nok"><span class="sr-only">etiqueta: </span>NOK</span></p>
+        
+      <p><strong>Nível de conformidade:</strong></p>
+        <ul>
+          <li><strong>Checklist Transação</strong>: 63.6% (7/11)
+            <ul>
+              <li>Requisitos avaliados: 13 (2 N/A excluídos, 11 aplicáveis)</li>
+              <li>Requisitos OK: 7</li>
+              <li>Requisitos NOK: 4</li>
+              <li>Requisitos N/A: 2</li>
+            </ul>
+          </li>
+        </ul>
+    
+        <h4 class="requirement-title" id="req-transacao-r-1.1">Requisito 1.1 - A sequência de tabulação entre campos segue a sequência de preenchimento</h4>
+<div class="requirement-content">
+<p><span class="status-nok"><span class="sr-only">etiqueta: </span>NOK</span></p>
+<p>Lista de evidências recolhidas:</p>
+<ul class="evidence-list">
+
+              <li class="evidence-item">
+                <p><span class="visually-hidden">evidência: </span><a href="https://github.com/a11y-PT/report_053/issues/47" class="issue-link" target="_blank" rel="noopener noreferrer">issue #47</a> <strong>A sequência de tabulação não segue a sequência de preenchimento.</strong></p>
+                <div class="evidence-labels"><span class="label-tag label-nok"><span class="sr-only">etiqueta: </span>NOK</span><span class="label-tag label-checklist"><span class="sr-only">etiqueta: </span>chk transação</span><span class="label-tag label-requisito"><span class="sr-only">etiqueta: </span>R 1.1</span></div>
+                <div class="issue-content"><blockquote>
+<p>A sequência de tabulação entre campos segue a sequência de preenchimento.<br>– <a href="https://amagovpt.github.io/kit-selo/checklists/checklist-transacao#n11">ver requisito 1.1 na lista Transação</a></p>
+</blockquote>
+<h3><strong>Evidências:</strong></h3>
+<p>No formulário da <a href="https://bupi.gov.pt/pt">página inicial</a>, para subscrever a newsletter verificou-se que a ordem de tabulação não corresponde à ordem de preenchimento dos campos: Escrever o email &gt; Dar consentimento &gt; Carregar no botão "Subscrever"</p>
+<img src="https://github.com/user-attachments/assets/19ed3bc4-8a0f-437b-8675-391a264f4432" alt="Image" class="evidence-image" style="max-width: 100%; height: auto; margin: 10px 0; border: 1px solid #ddd; border-radius: 4px;">
+
+
+
+<p><em>Figura 1 - Formulário de subscrição de newsletter</em></p>
+<h3><strong>Recomendações:</strong></h3>
+<p>Ao navegar pelo formulário com o teclado usando a tecla TAB, a sequência de tabulação deve seguir a ordem de preenchimento. Ou seja, quando o campo do email está preenchido, a ordem devem manter-se Escrever o email &gt; Dar consentimento &gt; Carregar no botão "Subscrever". </p>
+<p>Idealmente a o botão "Subscrever" devia estar fora do campo, abaixo da checkbox de consentimento. </p>
+</div>
+              </li></ul>
+</div>
+<h4 class="requirement-title" id="req-transacao-r-1.2">Requisito 1.2 - Os formulários com mais de 2 ecrãs de altura devem ser distribuídos por várias páginas</h4>
+<div class="requirement-content">
+<p><span class="status-ok"><span class="sr-only">etiqueta: </span>OK</span> (no entanto contém 1 melhoria que se recomenda efetuar)</p>
+<p>Lista de evidências recolhidas:</p>
+<ul class="evidence-list">
+
+              <li class="evidence-item">
+                <p><span class="visually-hidden">evidência: </span><a href="https://github.com/a11y-PT/report_053/issues/48" class="issue-link" target="_blank" rel="noopener noreferrer">issue #48</a> <strong>Evidência de checklist errada</strong></p>
+                <div class="evidence-labels"><span class="label-tag label-melhoria"><span class="sr-only">etiqueta: </span>melhoria</span><span class="label-tag label-checklist"><span class="sr-only">etiqueta: </span>chk transação</span><span class="label-tag label-requisito"><span class="sr-only">etiqueta: </span>R 1.2</span></div>
+                <div class="issue-content"><blockquote>
+<p>Os formulários com mais de 2 ecrãs de altura devem ser distribuídos por várias páginas.<br>– <a href="https://amagovpt.github.io/kit-selo/checklists/checklist-transacao#n12">ver requisito 1.2 na lista Transação</a></p>
+</blockquote>
+<p><strong>Evidências:</strong><br>Na checklist, classificaram este critério como Não Aplicável e colocaram formulários da área pública como evidência. </p>
+<p>No entanto, na área privada, o formulário de Pesquisa está distribuído por várias páginas. </p>
+<img src="https://github.com/user-attachments/assets/8c7e43ab-3660-4766-9ec6-06fd7fb10128" alt="Image" class="evidence-image" style="max-width: 100%; height: auto; margin: 10px 0; border: 1px solid #ddd; border-radius: 4px;">
+
+
+
+<p><em>Figura 1 - Formulário de pesquisar terreno da área privada</em> </p>
+<p> <strong>Recomendações:</strong><br>Colocar a avaliação do critério como OK e  colocar o formulário da área privada como evidência. </p>
+</div>
+              </li></ul>
+</div>
+<h4 class="requirement-title" id="req-transacao-r-1.3">Requisito 1.3 - Os formulários com mais de uma página têm a sequência de passos ilustrada</h4>
+<div class="requirement-content">
+<p><span class="status-nok"><span class="sr-only">etiqueta: </span>NOK</span></p>
+<p>Lista de evidências recolhidas:</p>
+<ul class="evidence-list">
+
+              <li class="evidence-item">
+                <p><span class="visually-hidden">evidência: </span><a href="https://github.com/a11y-PT/report_053/issues/75" class="issue-link" target="_blank" rel="noopener noreferrer">issue #75</a> <strong>Todos os separadores de passo têm o estado lido como &quot;Selecionado&quot; pelo leitor de ecrã</strong></p>
+                <div class="evidence-labels"><span class="label-tag label-nok"><span class="sr-only">etiqueta: </span>NOK</span><span class="label-tag label-checklist"><span class="sr-only">etiqueta: </span>chk transação</span><span class="label-tag label-requisito"><span class="sr-only">etiqueta: </span>R 1.3</span></div>
+                <div class="issue-content"><blockquote>
+<p>Os formulários com mais de uma página têm a sequência de passos ilustrada.<br>– <a href="https://amagovpt.github.io/kit-selo/checklists/checklist-transacao#n13">ver requisito 1.3 na lista Transação</a></p>
+</blockquote>
+<h3><strong>Evidências:</strong></h3>
+<p>Ao navegar com um leitor de ecrã pelos diferentes passos do separador situado acima do formulário, é anunciado que todos os passos se encontram selecionados, não sendo feita qualquer distinção entre os passos ativos e os inativos. Desta forma, o utilizador terá dificuldade em compreender em que passo do formulário se encontra. </p>
+<img src="https://github.com/user-attachments/assets/51a4e079-c433-4aa1-9b03-34a39ea6b068" alt="Image" class="evidence-image" style="max-width: 100%; height: auto; margin: 10px 0; border: 1px solid #ddd; border-radius: 4px;">
+
+
+
+<p>Figura 1 - Separador de passos inativo lido como "Selecionado" pelo leitor de ecrã". </p>
+<p>Todos os passos têm <code>role="tab" </code>e <code>tabindex="0"</code>, mas nenhum tem<code> aria-selected</code> definido. Os leitores de ecrã anunciam tabs sem <code>aria-selected="false"</code> como se estivessem todas ativas. O atributo <code>aria-selected</code> é o estado esperado para elementos com role="tab". Os leitores de ecrã anunciam automaticamente "selecionado" ou "não selecionado" com base neste atributo. </p>
+<p>Além disso, aria-current="step" está em todos os <code>&lt;div&gt;</code> filho (label), não no elemento com <code>role="tab"</code>.</p>
+<h3><strong>Recomendações:</strong></h3>
+<ul>
+<li>Adicionar <code>aria-selected="true"</code> no passo ativo, <code>aria-selected="false" </code>nos restantes</li>
+<li>Adicionar<code> aria-disabled="true"</code> nos passos ainda não acessíveis</li>
+<li>Remover <code>aria-current="step" </code>do elemento filho. É redundante face ao <code>aria-selected </code>e está no sítio errado.</li>
+</ul>
+</div>
+              </li>
+              <li class="evidence-item">
+                <p><span class="visually-hidden">evidência: </span><a href="https://github.com/a11y-PT/report_053/issues/49" class="issue-link" target="_blank" rel="noopener noreferrer">issue #49</a> <strong>Evidência da checklist errada</strong></p>
+                <div class="evidence-labels"><span class="label-tag label-melhoria"><span class="sr-only">etiqueta: </span>melhoria</span><span class="label-tag label-checklist"><span class="sr-only">etiqueta: </span>chk transação</span><span class="label-tag label-requisito"><span class="sr-only">etiqueta: </span>R 1.3</span></div>
+                <div class="issue-content"><blockquote>
+<p>Os formulários com mais de uma página têm a sequência de passos ilustrada.<br>– <a href="https://amagovpt.github.io/kit-selo/checklists/checklist-transacao#n13">ver requisito 1.3 na lista Transação</a></p>
+</blockquote>
+<p><strong>Evidências:</strong><br>Na checklist, classificaram este critério como Não Aplicável e colocaram formulários da área pública como evidência. </p>
+<p>No entanto, na área privada, o formulário de Pesquisa está distribuído por várias páginas. </p>
+<img src="https://github.com/user-attachments/assets/8c7e43ab-3660-4766-9ec6-06fd7fb10128" alt="Image" class="evidence-image" style="max-width: 100%; height: auto; margin: 10px 0; border: 1px solid #ddd; border-radius: 4px;">
+
+
+
+<p><em>Figura 1 - Formulário de pesquisar terreno da área privada</em> </p>
+<p> <strong>Recomendações:</strong><br>Colocar a avaliação do critério como OK e  colocar o formulário da área privada como evidência. </p>
+</div>
+              </li></ul>
+</div>
+<h4 class="requirement-title" id="req-transacao-r-2.4">Requisito 2.4 - Campos obrigatórios devem ser claramente indicados como tal</h4>
+<div class="requirement-content">
+<p><span class="status-nok"><span class="sr-only">etiqueta: </span>NOK</span></p>
+<p>Lista de evidências recolhidas:</p>
+<ul class="evidence-list">
+
+              <li class="evidence-item">
+                <p><span class="visually-hidden">evidência: </span><a href="https://github.com/a11y-PT/report_053/issues/76" class="issue-link" target="_blank" rel="noopener noreferrer">issue #76</a> <strong>Área privada - Não há informação sobre o significado dos asteriscos nos campos de preenchimento obrigatório</strong></p>
+                <div class="evidence-labels"><span class="label-tag label-nok"><span class="sr-only">etiqueta: </span>NOK</span><span class="label-tag label-checklist"><span class="sr-only">etiqueta: </span>chk transação</span><span class="label-tag label-requisito"><span class="sr-only">etiqueta: </span>R 2.4</span></div>
+                <div class="issue-content"><blockquote>
+<p>Campos obrigatórios devem ser claramente indicados como tal.<br>– <a href="https://amagovpt.github.io/kit-selo/checklists/checklist-transacao#n24">ver requisito 2.4 na lista Transação</a></p>
+</blockquote>
+<h3><strong>Evidências:</strong></h3>
+<p>Os campos dos formulários que existem no site, como os campos na página apresentam um asterisco de cor vermelha na suas labels, no entanto, não é apresentada nenhuma definição do significado dos asteriscos no fundo ou no início do formulário. </p>
+<img src="https://github.com/user-attachments/assets/06f9e455-d433-4be2-a954-a1cf1fdc0d15" alt="Image" class="evidence-image" style="max-width: 100%; height: auto; margin: 10px 0; border: 1px solid #ddd; border-radius: 4px;">
+
+
+
+<p><em>Figura 1 - Campos do formulário de Pesquisa com asterisco vermelho</em></p>
+<p>Embora os campos tenham o atributo <code>required </code>na construção HTML e transmitem a informação para pessoas que navegam com leitor de ecrã, a mesma informação não é imediatamente clara para quem depende da visão. </p>
+<h3><strong>Recomendações:</strong></h3>
+<p>Devem rever todos os formulários do site para que tenham o significado do asterisco. </p>
+<p>Os campos obrigatórios dos formulários devem estar devidamente identificados como tal. </p>
+<p>Idealmente, devem apresentar o texto “Obrigatório” à frente da legenda do campo. No entanto,<strong>pode-se colocar um * no campo obrigatório</strong>, <strong>desde que o significado do * seja mencionado</strong>, preferencialmente, no início do formulário (exemplo: * Preenchimento obrigatório).</p>
+</div>
+              </li>
+              <li class="evidence-item">
+                <p><span class="visually-hidden">evidência: </span><a href="https://github.com/a11y-PT/report_053/issues/53" class="issue-link" target="_blank" rel="noopener noreferrer">issue #53</a> <strong>Área pública - Não há informação clara sobre o que é o asterisco nos campos de preenchimento obrigatório </strong></p>
+                <div class="evidence-labels"><span class="label-tag label-nok"><span class="sr-only">etiqueta: </span>NOK</span><span class="label-tag label-checklist"><span class="sr-only">etiqueta: </span>chk transação</span><span class="label-tag label-requisito"><span class="sr-only">etiqueta: </span>R 2.4</span></div>
+                <div class="issue-content"><blockquote>
+<p>Campos obrigatórios devem ser claramente indicados como tal.<br>– <a href="https://amagovpt.github.io/kit-selo/checklists/checklist-transacao#n24">ver requisito 2.4 na lista Transação</a></p>
+</blockquote>
+<h3><strong>Evidências:</strong></h3>
+<p>Os campos dos formulários que existem no site, como os campos na página <a href="https://bupi.gov.pt/pt/formulario-de-registo">formulário de registo</a> e <a href="https://bupi.gov.pt/pt/contactos">Contactos</a> apresentam um asterisco de cor vermelha na suas labels, no entanto, não é apresentada nenhuma definição do significado dos asteriscos no fundo ou no início do formulário. </p>
+<img src="https://github.com/user-attachments/assets/21ed5a74-52d3-4bc4-bafd-af6606e0c39a" alt="Image" class="evidence-image" style="max-width: 100%; height: auto; margin: 10px 0; border: 1px solid #ddd; border-radius: 4px;">
+
+
+
+<p><em>Figura 1 - Campos do formulário de Registo com asterisco vermelho</em></p>
+<p>Embora os campos tenham o atributo <code>required </code>na construção HTML e transmitem a informação para pessoas que navegam com leitor de ecrã, a mesma informação não é imediatamente clara para quem depende da visão. </p>
+<h3><strong>Recomendações:</strong></h3>
+<p>Devem rever todos os formulários do site para que tenham o significado do asterisco. </p>
+<p>Os campos obrigatórios dos formulários devem estar devidamente identificados como tal. </p>
+<p>Idealmente, devem apresentar o texto “Obrigatório” à frente da legenda do campo. No entanto,<strong>pode-se colocar um * no campo obrigatório</strong>, <strong>desde que o significado do * seja mencionado</strong>, preferencialmente, no início do formulário (exemplo: * Preenchimento obrigatório).</p>
+</div>
+              </li></ul>
+</div>
+<h4 class="requirement-title" id="req-transacao-r-3.1">Requisito 3.1 - Em ações longas, o sistema deve indicar o que está a acontecer</h4>
+<div class="requirement-content">
+<p><span class="status-na"><span class="sr-only">etiqueta: </span>N/A</span></p>
+<p>Lista de evidências recolhidas:</p>
+<ul class="evidence-list">
+
+              <li class="evidence-item">
+                <p><span class="visually-hidden">evidência: </span><a href="https://github.com/a11y-PT/report_053/issues/54" class="issue-link" target="_blank" rel="noopener noreferrer">issue #54</a> <strong>Não existem ações longas</strong></p>
+                <div class="evidence-labels"><span class="label-tag label-checklist"><span class="sr-only">etiqueta: </span>chk transação</span><span class="label-tag label-na"><span class="sr-only">etiqueta: </span>N/A</span><span class="label-tag label-requisito"><span class="sr-only">etiqueta: </span>R 3.1</span></div>
+                <div class="issue-content"><blockquote>
+<p>Em ações longas, o sistema deve indicar o que está a acontecer.<br>– <a href="https://amagovpt.github.io/kit-selo/checklists/checklist-transacao#n31">ver requisito 3.1 na lista Transação</a></p>
+</blockquote>
+<h3><strong>Evidências:</strong></h3>
+<p>O sítio não contém ações transicionais longas. </p>
+<p>Quando a página demora a carregar, optam por <em>progressive loading</em>. </p>
+</div>
+              </li></ul>
+</div>
+<h4 class="requirement-title" id="req-transacao-r-3.2">Requisito 3.2 - Deve ser confirmado o sucesso da transação/envio de informação</h4>
+<div class="requirement-content">
+<p><span class="status-ok"><span class="sr-only">etiqueta: </span>OK</span> (no entanto contém 1 melhoria que se recomenda efetuar)</p>
+<p>Lista de evidências recolhidas:</p>
+<ul class="evidence-list">
+
+              <li class="evidence-item">
+                <p><span class="visually-hidden">evidência: </span><a href="https://github.com/a11y-PT/report_053/issues/55" class="issue-link" target="_blank" rel="noopener noreferrer">issue #55</a> <strong>O leitor de ecrã não anuncia o sucesso ou erro do envio de informações automaticamente</strong></p>
+                <div class="evidence-labels"><span class="label-tag label-melhoria"><span class="sr-only">etiqueta: </span>melhoria</span><span class="label-tag label-checklist"><span class="sr-only">etiqueta: </span>chk transação</span><span class="label-tag label-requisito"><span class="sr-only">etiqueta: </span>R 3.2</span></div>
+                <div class="issue-content"><blockquote>
+<p>Deve ser confirmado o sucesso da transação/envio de informação.<br>– <a href="https://amagovpt.github.io/kit-selo/checklists/checklist-transacao#n32">ver requisito 3.2 na lista Transação</a></p>
+</blockquote>
+<h3><strong>Evidências:</strong></h3>
+<p>É sempre apresentada uma mensagem de confirmação ao utilizador após a submissão do formulário. No entanto, o leitor de ecrã não comunica essa informação automaticamente, sendo necessário o utilizador navegar até ao fundo do formulário manualmente para compreender que a informação foi enviada.  </p>
+<img src="https://github.com/user-attachments/assets/58466331-0e57-463a-bd81-350010185bec" alt="Image" class="evidence-image" style="max-width: 100%; height: auto; margin: 10px 0; border: 1px solid #ddd; border-radius: 4px;">
+
+
+
+<p><em>Figura 1 - Mensagem de envio com sucesso do Formulário de registo</em> </p>
+<h3><strong>Recomendações:</strong></h3>
+<p>Rever  todos os formulários da área pública e privada, incluindo o formulário da newsletter na página inicial e da pesquisa no topo da página, para que as mensagens de sucesso, erro ou resultados não encontrados sejam lidos automaticamente pelo leitor de ecrã. </p>
+<p>Existem várias abordagens para resolver este problema de acessibilidade, sendo a utilização de regiões aria-live (a mais comum) uma das mais eficazes. Esta pode ser complementada com a gestão programática do foco, através da definição de <code>tabindex="-1"</code> na mensagem, permitindo que o foco seja deslocado automaticamente para o conteúdo relevante após a submissão.</p>
+<p>O objetivo é disponibilizar no DOM um contentor com <code>aria-live</code> previamente definido, antes da mensagem ser apresentada. Quando o seu conteúdo é atualizado, o leitor de ecrã anuncia automaticamente essa alteração.</p>
+<p>Podem optar por: </p>
+<ul>
+<li><code>aria-live="polite"</code>: a mensagem é anunciada quando o utilizador fizer uma pausa na interação. É a opção recomendada para mensagens de confirmação ou informação não crítica.</li>
+<li><code>aria-live="assertive"</code>: a mensagem é anunciada de imediato, interrompendo a leitura em curso. Deve ser utilizado apenas em situações críticas, como erros importantes ou falhas no sistema.</li>
+</ul>
+</div>
+              </li></ul>
+</div>
+<h4 class="requirement-title" id="req-transacao-r-4.2">Requisito 4.2 - As ações destrutivas nunca devem ser permanentes; deve ser sempre possível desfazer a operação</h4>
+<div class="requirement-content">
+<p><span class="status-na"><span class="sr-only">etiqueta: </span>N/A</span></p>
+<p>Lista de evidências recolhidas:</p>
+<ul class="evidence-list">
+
+              <li class="evidence-item">
+                <p><span class="visually-hidden">evidência: </span><a href="https://github.com/a11y-PT/report_053/issues/57" class="issue-link" target="_blank" rel="noopener noreferrer">issue #57</a> <strong>Não existem ações destrutivas nos formulários</strong></p>
+                <div class="evidence-labels"><span class="label-tag label-checklist"><span class="sr-only">etiqueta: </span>chk transação</span><span class="label-tag label-na"><span class="sr-only">etiqueta: </span>N/A</span><span class="label-tag label-requisito"><span class="sr-only">etiqueta: </span>R 4.2</span></div>
+                <div class="issue-content"><blockquote>
+<p>As ações destrutivas nunca devem ser permanentes, deve ser sempre possível desfazer a operação.<br>– <a href="https://amagovpt.github.io/kit-selo/checklists/checklist-transacao#n42">ver requisito 4.2 na lista Transação</a></p>
+</blockquote>
+<p><strong>Evidências:</strong><br>Nos formulários não existe situações "destrutivas" depois de submeter por exemplo não se pode cancelar, o que foi submetido.</p>
+</div>
+              </li></ul>
+</div>
+<h4 class="requirement-title" id="req-transacao-r-4.3">Requisito 4.3 - As mensagens de erro são claramente identificadas junto aos campos de origem</h4>
+<div class="requirement-content">
+<p><span class="status-nok"><span class="sr-only">etiqueta: </span>NOK</span></p>
+<p>Lista de evidências recolhidas:</p>
+<ul class="evidence-list">
+
+              <li class="evidence-item">
+                <p><span class="visually-hidden">evidência: </span><a href="https://github.com/a11y-PT/report_053/issues/58" class="issue-link" target="_blank" rel="noopener noreferrer">issue #58</a> <strong>O leitor de ecrã não lê as mensagens de erro quando foca nos campos</strong></p>
+                <div class="evidence-labels"><span class="label-tag label-nok"><span class="sr-only">etiqueta: </span>NOK</span><span class="label-tag label-checklist"><span class="sr-only">etiqueta: </span>chk transação</span><span class="label-tag label-requisito"><span class="sr-only">etiqueta: </span>R 4.3</span></div>
+                <div class="issue-content"><blockquote>
+<p>As mensagens de erro são claramente identificadas junto aos campos de origem.<br>– <a href="https://amagovpt.github.io/kit-selo/checklists/checklist-transacao#n43">ver requisito 4.3 na lista Transação</a></p>
+</blockquote>
+<h3><strong>Evidências:</strong></h3>
+<p>Quando se navega apenas com a tecla Tab pelos campos do formulário, a informação do erro não é comunicada, sendo necessário navegar pelos elementos um a um até chegar especificamente à mensagem de erro. </p>
+<img src="https://github.com/user-attachments/assets/6382da83-70a0-4963-9905-5350910f3e6e" alt="Image" class="evidence-image" style="max-width: 100%; height: auto; margin: 10px 0; border: 1px solid #ddd; border-radius: 4px;">
+
+
+
+<p><em>Figura 1 - Leitor de ecrã quando está focado no campo do formulário de <a href="https://bupi.gov.pt/pt/contactos">Contactos</a> não lê a mensagem de erro</em></p>
+<h3><strong>Recomendações:</strong></h3>
+<p>Os campos dos formulários devem devolver mensagens de erros relativas ao problema encontrado em cada campo, que devem ser identificadas visualmente e pelo leitor de ecrã. </p>
+<p>Deve-se aplicar o atributo <code>aria-describedby="" </code>para que as mensagens de erro fiquem associadas aos respectivos campos e que essa associação seja detectada pelos leitores de ecrã.</p>
+<p>Podem identificar a boa prática implementada no <a href="https://cidadao.bupi.gov.pt/Process_Search?ProcessId=0">formulário de Pesquisa da área privada</a>, no erro de NIF inválido. </p>
+<img src="https://github.com/user-attachments/assets/03045cd5-8f74-4734-b5f1-84bdea14482c" alt="Image" class="evidence-image" style="max-width: 100%; height: auto; margin: 10px 0; border: 1px solid #ddd; border-radius: 4px;">
+
+
+
+<p><em>Figura 2 - Mensagem do NIF inválido está associada ao campo através do atributo <code>aria-describedby</code></em> </p>
+</div>
+              </li></ul>
+</div>
+
+      </div>
+      <div class="checklist-section">
+        <h3 id="outras-violacoes">Outras violações</h3>
+        <div class="requirement-content">
+<p><span class="status-nok"><span class="sr-only">etiqueta: </span>NOK</span></p>
+<p>Lista de evidências recolhidas:</p>
+<ul class="evidence-list">
+
+              <li class="evidence-item">
+                <p><span class="visually-hidden">evidência: </span><a href="https://github.com/a11y-PT/report_053/issues/74" class="issue-link" target="_blank" rel="noopener noreferrer">issue #74</a> <strong>Ausência de indicador de foco de teclado</strong></p>
+                <div class="evidence-labels"><span class="label-tag label-nok"><span class="sr-only">etiqueta: </span>NOK</span><span class="label-tag label-outras"><span class="sr-only">etiqueta: </span>outras violações</span></div>
+                <div class="issue-content"><h3>Evidências</h3>
+<p>Ao navegar na interface utilizando apenas o teclado, não é possível identificar visualmente qual elemento está em foco. A ausência de um indicador de foco (focus state) dificulta a navegação, especialmente para utilizadores que dependem do teclado ou de tecnologias assistivas, comprometendo a acessibilidade e a usabilidade da aplicação.</p>
+<h3>Recomendações</h3>
+<p>Deve ser implementado um estilo visível para o estado de foco dos elementos interativos (como :focus e :focus-visible em CSS). Este indicador deve ser claramente distinguível (por exemplo, outline, sombra ou alteração de cor) e consistente em toda a interface, garantindo que o utilizador consegue identificar facilmente o elemento atualmente selecionado durante a navegação por teclado.</p>
+</div>
+              </li></ul>
+</div>
+
+      </div></section>
+
+    <section id="etiquetas" class="mb-5 report-section">
+      <h2>Significado das etiquetas utilizadas</h2>
+      <ul>
+        <li><span class="label-tag label-ok"><span class="sr-only">etiqueta: </span>OK</span> - status OK</li>
+        <li><span class="label-tag label-melhoria"><span class="sr-only">etiqueta: </span>melhoria</span> - status OK, mas pode melhorar</li>
+        <li><span class="label-tag label-nok"><span class="sr-only">etiqueta: </span>NOK</span> - status Not OK</li>
+        <li><span class="label-tag label-na"><span class="sr-only">etiqueta: </span>N/A</span> - status Não Aplicável</li>
+        <li><span class="label-tag label-checklist"><span class="sr-only">etiqueta: </span>chk10 web</span> - checklist 10 Aspetos críticos de acessibilidade funcional</li>
+        <li><span class="label-tag label-checklist"><span class="sr-only">etiqueta: </span>chk conteúdo</span> - checklist Conteúdo</li>
+        <li><span class="label-tag label-checklist"><span class="sr-only">etiqueta: </span>chk transação</span> - checklist Transação</li>
+        <li><span class="label-tag label-outras"><span class="sr-only">etiqueta: </span>outras violações</span> - permite construir o subcapítulo "Outras violações", o qual integra o capítulo "Avaliações manuais"</li>
+        <li><span class="label-tag label-declaracao"><span class="sr-only">etiqueta: </span>dec a11y</span> - permite construir o capítulo "Declaração de acessibilidade e usabilidade"</li>
+        <li><span class="label-tag label-auto"><span class="sr-only">etiqueta: </span>av auto</span> - permite construir o capítulo "Avaliação automática"</li>
+        <li><span class="label-tag label-checklist"><span class="sr-only">etiqueta: </span>testes usabilidade</span> - permite construir o capítulo "Testes de usabilidade"</li>
+      </ul>
+    </section>
+
+  </div>
+  <footer class="report-footer">
+    <p>© 2026 ARTE - Agência para a Reforma Tecnológica do Estado, I.P. Todos os Direitos Reservados.</p>
+    <p><em lang="en">GitReports v1.0</em> - relatório gerado automaticamente a partir dos <em lang="en">issues</em> do GitHub</p>
+  </footer>
+  <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+</body>
+</html>
