@@ -86,7 +86,7 @@
       <ul>
         <li>Avaliação feita por: ARTE. I.P. - Núcleo de Experiência e Usabilidade</li>
         <li>Data de criação: 13/04/2026</li>
-        <li>Última atualização: 28/04/2026</li>
+        <li>Última atualização: 29/04/2026</li>
         <li>URL: <a href="https://bupi.gov.pt/pt" target="_blank" rel="noopener noreferrer">https://bupi.gov.pt/pt</a></li>
         <li>Propriedade: eBUPi</li>
         <li>Candidatura: Prata</li>
@@ -677,8 +677,20 @@
 
 
 <p><em>Figura 3 - Campo para subscrever newsletter na página inicial</em></p>
+<p>Além disso, existem campos de input com labels inseridos dentro de labels, fazendo com que o leitor de ecrã repita a label duas vezes. </p>
+<img src="https://github.com/user-attachments/assets/6efe50f4-54e3-4376-8ea6-196265754b46" alt="Image" class="evidence-image" style="max-width: 100%; height: auto; margin: 10px 0; border: 1px solid #ddd; border-radius: 4px;">
+
+
+
+<p>Figura 4 - HTML apresenta campo de input  e a label asssociada inseridos dentro de uma label</p>
+<img src="https://github.com/user-attachments/assets/c3519f08-2601-4483-a37c-16038a1f8daf" alt="Image" class="evidence-image" style="max-width: 100%; height: auto; margin: 10px 0; border: 1px solid #ddd; border-radius: 4px;">
+
+
+
+<p>Figura 5 - Leitor de ecrã lê a label 2 vezes. </p>
 <h3><strong>Recomendações:</strong></h3>
 <p>Devem garantir que <strong>todos os campos de edição da área pública</strong>, dropdowns, pesquisa, date pickers, são estruturados como <input> e com uma <label>. O <code>for</code> da <code>&lt;label&gt;</code> deve ter o mesmo valor que o <code>id</code> do <code>&lt;input&gt;</code>, para que o leitor de ecrã consiga comunicar a informação da label do campo quando foca no componente, assim como o cursor surgir no respectivo campo de edição quando se clica na etiqueta.</label></p>
+<p>Evitar labels redundantes, uma vez que o leitor de ecrã lê a label associada ao campo, não sendo necessário criar uma label "sr-only". </p>
 </div>
               </li></ul>
 </div>
