@@ -3,6 +3,7 @@ website: "BUPi - Balcão Único do Prédio (Área pública + privada)"          
 date: "13/04/2026"                    # Entre as aspas escreve a data de criação do 1º relatório. Os restantes estão no histórico
 uri: "https://bupi.gov.pt/pt"   # Entre as aspas escreve o domínio do website
 a11y_statement: "https://bupi.gov.pt/pt/acessibilidade" # Entre as aspas escreve o URL da Declaração de Acessibilidade do website
+a11y_statement_date: "02/12/2025"  # Entre as aspas escreve a data da Declaração de Acessibilidade
 owner: "eBUPi"         # Entre as aspas escrever o nome do owner do website
 seal: "Prata"                          # Entre as aspas escreve Bronze, Prata ou Ouro
 status: "A aguardar correções da entidade"   #Entre as aspas escreve o estado do relatório
